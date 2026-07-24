@@ -1,0 +1,5 @@
+dynasty: tang
+cities:
+  - { name: 长安, modernName: 西安, lon: 108.94, lat: 34.34, region: 京畿道 }
+  - { name: 洛阳, modernName: 洛阳, lon: 112.45, lat: 34.62, region: 都畿道 }
+  - { name: 扬州, modernName: 扬州, lon: 119.41, lat: 32.39, region: 淮南道 }

@@ -1,0 +1,8 @@
+- id: tang
+  name: 唐
+  era: [618, 907]
+  divisionName: 道
+  basemap: geo/tang/basemap.svg
+  cities: geo/tang/cities.yaml
+  projection: { lon0: 72, lat0: 54.5, s: 25, sy: 29 }
+  viewBox: "0 0 1650 1130"

@@ -1,0 +1,14 @@
+id: sample
+name: 样例
+courtesyName: 样例
+dynasty: tang
+birth: { year: 701, place: 碎叶 }
+death: { year: 762, place: 当涂 }
+theme: libai
+summary:
+  review: 评传样例
+  stats: { cities: 3, works: 存诗样例, topOffice: 翰林供奉, age: 61 }
+stops:
+  - { year: 726, city: 扬州, event: 样例事件, role: 布衣, source: 样例出处 }
+works:
+  - { title: 样例诗, year: 726, city: 扬州, genre: 诗, text: 床前明月光。, background: 样例背景, famous: [床前明月光], source: 样例出处 }
