@@ -1408,7 +1408,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: `Poet`、`Work`、`usePoetState`
 - Produces: `<SummarySection poet>`、`<QuotesSection works>`、`<WorksSection works>`
 
-- [ ] **Step 1: 写板块测试**
+- [x] **Step 1: 写板块测试**
 
 `src/components/sections/sections.test.tsx`:
 
@@ -1459,12 +1459,12 @@ describe('WorksSection', () => {
 })
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `pnpm vitest run src/components/sections/sections.test.tsx`
 Expected: FAIL，`Cannot find module './SummarySection'`
 
-- [ ] **Step 3: 实现三板块并挂载**
+- [x] **Step 3: 实现三板块并挂载**
 
 `src/components/sections/SummarySection.tsx`:
 
@@ -1569,11 +1569,11 @@ export function WorksSection({ works }: { works: Work[] }) {
 
 （顶部 import 追加 `import { SummarySection } from '../components/sections/SummarySection'` 等三行。）
 
-- [ ] **Step 4: 测试通过**
+- [x] **Step 4: 测试通过**
 
 Run: `pnpm vitest run src/components/sections/sections.test.tsx` → PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A
