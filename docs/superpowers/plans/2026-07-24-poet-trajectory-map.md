@@ -539,7 +539,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: `CitiesFileSchema`
 - Produces: 覆盖五人全部 stops/works 所需城市的完整坐标表
 
-- [ ] **Step 1: 写入完整坐标表**
+- [x] **Step 1: 写入完整坐标表**
 
 `data/geo/tang/cities.yaml` 全量替换为（坐标已对照谭其骧《中国历史地图集》唐代分册与现代地名复核；`region` 为唐一级行政区）:
 
@@ -596,11 +596,11 @@ cities:
   - { name: 辋川, modernName: 陕西蓝田, lon: 109.32, lat: 34.15, region: 京畿道 }
 ```
 
-- [ ] **Step 2: 校验通过**
+- [x] **Step 2: 校验通过**
 
 Run: `pnpm build:data` → 退出码 0（坐标表 schema 合法）
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add data/geo/tang/cities.yaml
