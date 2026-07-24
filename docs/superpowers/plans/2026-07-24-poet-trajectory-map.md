@@ -2033,7 +2033,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: `public/data/index.json`（`PoetIndexEntry[]`）、`MotifIcon`、`poetThemes`
 - Produces: 完整总览页
 
-- [ ] **Step 1: 实现总览页**
+- [x] **Step 1: 实现总览页**
 
 `src/components/PaperTexture.tsx`:
 
@@ -2136,11 +2136,11 @@ export function OverviewPage() {
 }
 ```
 
-- [ ] **Step 2: 视觉验证**
+- [x] **Step 2: 视觉验证**
 
 Run: `pnpm build:data && pnpm dev`，playwright-cli 截图总览页桌面 + 移动视口（`/tmp/pm/task10-overview.png`、`/tmp/pm/task10-mobile.png`），确认卡片墙、纸纹、移动端布局
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add -A
