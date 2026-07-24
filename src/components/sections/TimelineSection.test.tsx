@@ -17,7 +17,7 @@ function YearProbe() {
 function renderWithState() {
   return render(
     <PoetStateProvider initialYear={762}>
-      <TimelineSection stops={stops} />
+      <TimelineSection stops={stops} poetId="libai" />
       <YearProbe />
     </PoetStateProvider>,
   )

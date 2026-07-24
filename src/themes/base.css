@@ -27,3 +27,35 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .mounted-card { background: #f8f4e8; border: 1px solid #c9b992; box-shadow: 0 2px 12px rgba(80, 60, 30, .15); padding: 16px 20px; }
 .work-card header { cursor: pointer; display: flex; gap: 16px; align-items: baseline; }
 .work-text { white-space: pre-line; line-height: 2; }
+
+/* ===== 彩蛋系统 ===== */
+.lake-level { animation: lake-breathe 4s ease-in-out infinite; }
+@keyframes lake-breathe { 0%,100% { opacity: .4 } 50% { opacity: .8 } }
+
+.westward-suiye { font-size: 18px; fill: var(--accent); opacity: .7; }
+
+.hanlin-seal text { font-size: 24px; font-family: var(--font-calligraphy), "Kaiti SC", serif; text-anchor: middle; }
+
+.straw-hut { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; transition: transform .4s ease; }
+.straw-hut-group:hover .straw-hut { transform: rotateX(60deg); }
+
+.bamboo-stem { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+.bamboo-sway { animation: sway 4s ease-in-out infinite; }
+@keyframes sway { 0%,100% { transform: rotate(-2deg) } 50% { transform: rotate(2deg) } }
+
+.rippling { animation: ripple 800ms ease-out forwards; }
+@keyframes ripple { from { r: 10; opacity: .6 } to { r: 80; opacity: 0 } }
+
+.falling-petals { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.petal { position: absolute; top: -10px; width: 10px; height: 10px; background: var(--accent-soft); border-radius: 50% 0 50% 0; opacity: .7; animation: fall 6s linear infinite; }
+@keyframes fall { to { transform: translateY(120px) rotate(40deg); opacity: 0 } }
+
+.lute-note { fill: var(--accent); font-size: 16px; animation: float-note 3s ease-in-out infinite; }
+@keyframes float-note { 0% { opacity: .8 } 50% { transform: translateY(-15px); opacity: .3 } 100% { transform: translateY(-30px); opacity: 0 } }
+
+.grass-sway { position: absolute; bottom: 0; left: 0; right: 0; height: 30px; pointer-events: none; }
+.grass-blade { position: absolute; bottom: 0; width: 2px; height: 18px; background: var(--accent); transform-origin: bottom center; animation: grass-sway 3s ease-in-out infinite; }
+@keyframes grass-sway { 0%,100% { transform: rotate(-3deg) } 50% { transform: rotate(3deg) } }
+
+.quotes-section { position: relative; }
+.timeline-section { position: relative; }

@@ -36,9 +36,9 @@ export function PoetPage() {
       <main className="poet-page">
         <HeroMap bundle={bundle} theme={theme} dynasty={dynastyInfo} />
         <TimeSlider min={bundle.poet.birth.year} max={bundle.poet.death.year} />
-        <TimelineSection stops={bundle.poet.stops} />
+        <TimelineSection stops={bundle.poet.stops} poetId={poetId!} />
         <SummarySection poet={bundle.poet} />
-        <QuotesSection works={bundle.poet.works} />
+        <QuotesSection works={bundle.poet.works} poetId={poetId!} />
         <WorksSection works={bundle.poet.works} />
       </main>
     </PoetStateProvider>

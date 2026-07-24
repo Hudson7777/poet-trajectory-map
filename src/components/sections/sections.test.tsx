@@ -25,7 +25,7 @@ describe('SummarySection', () => {
 
 describe('QuotesSection', () => {
   it('聚合名句最多 5 句并标注出处', () => {
-    render(<QuotesSection works={works} />)
+    render(<QuotesSection works={works} poetId="libai" />)
     expect(screen.getByText('床前明月光')).toBeTruthy()
     expect(screen.getByText('《静夜思》')).toBeTruthy()
   })

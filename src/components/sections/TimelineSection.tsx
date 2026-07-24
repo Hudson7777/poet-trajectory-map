@@ -1,8 +1,11 @@
 import type { Stop } from '../../data/schemas'
 import { usePoetState } from '../../pages/poet-state'
+import { poetThemes } from '../../themes'
+import { renderEasterEggs } from '../../themes/easter-eggs/registry'
 
-export function TimelineSection({ stops }: { stops: Stop[] }) {
+export function TimelineSection({ stops, poetId }: { stops: Stop[]; poetId: string }) {
   const { hoveredStop, setHoveredStop, setYear } = usePoetState()
+  const theme = poetThemes[poetId] ?? poetThemes.libai
   return (
     <section className="timeline-section">
       <h2 className="section-title">生平年表</h2>
@@ -22,6 +25,7 @@ export function TimelineSection({ stops }: { stops: Stop[] }) {
           </li>
         ))}
       </ol>
+      {renderEasterEggs(theme.easterEggs, 'timeline')}
     </section>
   )
 }

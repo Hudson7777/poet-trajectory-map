@@ -1,6 +1,9 @@
 import type { Work } from '../../data/schemas'
+import { poetThemes } from '../../themes'
+import { renderEasterEggs } from '../../themes/easter-eggs/registry'
 
-export function QuotesSection({ works }: { works: Work[] }) {
+export function QuotesSection({ works, poetId }: { works: Work[]; poetId: string }) {
+  const theme = poetThemes[poetId] ?? poetThemes.libai
   const quotes = works.flatMap(w => w.famous.map(line => ({ line, title: w.title }))).slice(0, 5)
   return (
     <section className="quotes-section">
@@ -13,6 +16,7 @@ export function QuotesSection({ works }: { works: Work[] }) {
           </blockquote>
         ))}
       </div>
+      {renderEasterEggs(theme.easterEggs, 'quote')}
     </section>
   )
 }

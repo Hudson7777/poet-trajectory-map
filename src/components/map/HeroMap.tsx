@@ -7,6 +7,7 @@ import { Trajectory } from './Trajectory'
 import { CityMarker } from './CityMarker'
 import { WorkMarker } from './WorkMarker'
 import { createProjection, visibleStops } from './projection'
+import { renderEasterEggs } from '../../themes/easter-eggs/registry'
 
 const basemapModules = import.meta.glob('../../../data/geo/*/basemap.svg', {
   query: '?raw',
@@ -49,6 +50,10 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
     <section className="hero-map">
       <InkMap basemapRaw={basemapRaw} viewBox={dynasty.viewBox} controllerRef={controllerRef}>
         <Trajectory stops={bundle.poet.stops} cities={bundle.cities} project={project} year={year} style={trajectoryStyle} />
+        {renderEasterEggs(theme.easterEggs, 'map', city => {
+          const c = bundle.cities[city]
+          return c ? project(c.lon, c.lat) : undefined
+        })}
         {visible.map(stop => {
           const c = bundle.cities[stop.city]
           return (
