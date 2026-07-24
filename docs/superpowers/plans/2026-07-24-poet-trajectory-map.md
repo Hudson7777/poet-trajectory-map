@@ -1023,7 +1023,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: `PoetBundle`、`InkMap`、`Trajectory`、`CityMarker`、`WorkMarker`、`TANG_PROJECTION`、`createProjection`、`computeFlyTransform`
 - Produces: `PoetStateProvider`、`usePoetState()`（{ year, hoveredStop, setYear, setHoveredStop }）、`usePoetBundle(dynasty, poetId)`、`<HeroMap bundle theme>`、`<TimeSlider min max>`、`<TimelineSection stops>`
 
-- [ ] **Step 1: 写年表联动测试**
+- [x] **Step 1: 写年表联动测试**
 
 `src/components/sections/TimelineSection.test.tsx`:
 
@@ -1067,12 +1067,12 @@ describe('TimelineSection', () => {
 })
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `pnpm vitest run src/components/sections/TimelineSection.test.tsx`
 Expected: FAIL，`Cannot find module './TimelineSection'`
 
-- [ ] **Step 3: 实现状态/组件/页面**
+- [x] **Step 3: 实现状态/组件/页面**
 
 `src/pages/poet-state.tsx`:
 
@@ -1382,12 +1382,12 @@ export function PoetPage() {
 }
 ```
 
-- [ ] **Step 4: 测试通过 + 视觉验证**
+- [x] **Step 4: 测试通过 + 视觉验证**
 
 Run: `pnpm vitest run src/components/sections/TimelineSection.test.tsx` → PASS
 视觉验证：`pnpm build:data` 后用 `_sample.yaml` 临时复制为 `data/poets/tang/sample.yaml`（验证后删除），`pnpm dev` 访问 `/poets/tang/sample`，playwright-cli 截图确认地图 + 年表 + 时间轴渲染（`/tmp/pm/task6-hero.png`）
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A
