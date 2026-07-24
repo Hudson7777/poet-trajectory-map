@@ -620,7 +620,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: `~/Documents/claude-outputs/文人轨迹地图-方案B-手绘水墨风.html`（spec 阶段已验证的 mockup，含 brush/rough 滤镜、晕染疆域、青绿河流、皴法山形）
 - Produces: `createProjection(lon0, lat0, s, sy): Projection`、`TANG_PROJECTION` 常量、`buildTrajectoryPath(points, smooth): string`、`visibleStops(stops, year): Stop[]`、`computeFlyTransform(target, viewport, scale): ZoomTransform`、`<InkMap basemapRaw viewBox controllerRef onZoomChange>` 与 `InkMapController.flyTo(target, scale?)`
 
-- [ ] **Step 1: 从 mockup 提取水墨底图**
+- [x] **Step 1: 从 mockup 提取水墨底图**
 
 `scripts/extract-basemap.py`:
 
@@ -648,7 +648,7 @@ print('basemap.svg written')
 Run: `python3 scripts/extract-basemap.py` → 输出 `basemap.svg written`
 说明：**basemap.svg 是 SVG 片段（不含外层 `<svg>` 标签）**，viewBox 以 `dynasties.yaml` 的 `viewBox` 字段为准，InkMap 将其注入 `<g>` 内。v1 底图为写意晕染基底（不承载现代国界语义，brush 位移后仅作水墨意境）；v2 可对照谭图手绘精修唐域示意。
 
-- [ ] **Step 2: 写投影失败测试**
+- [x] **Step 2: 写投影失败测试**
 
 `src/components/map/projection.test.ts`:
 
@@ -689,12 +689,12 @@ describe('visibleStops', () => {
 })
 ```
 
-- [ ] **Step 3: 运行确认失败**
+- [x] **Step 3: 运行确认失败**
 
 Run: `pnpm vitest run src/components/map/projection.test.ts`
 Expected: FAIL，`Cannot find module './projection'`
 
-- [ ] **Step 4: 实现 projection.ts / flyTo.ts / InkMap.tsx**
+- [x] **Step 4: 实现 projection.ts / flyTo.ts / InkMap.tsx**
 
 `src/components/map/projection.ts`:
 
@@ -806,12 +806,12 @@ export function InkMap({ basemapRaw, viewBox, controllerRef, onZoomChange, child
 }
 ```
 
-- [ ] **Step 5: 测试通过 + 视觉验证**
+- [x] **Step 5: 测试通过 + 视觉验证**
 
 Run: `pnpm vitest run src/components/map/projection.test.ts` → 全部 PASS
 视觉验证：写一个临时 `src/pages/PoetPage.tsx` 直接用 `import basemapRaw from '../../data/geo/tang/basemap.svg?raw'` 渲染 `<InkMap>`，`pnpm dev` 后用 playwright-cli 截图确认水墨底图可缩放、无破版（截图存档 `/tmp/pm/task4-basemap.png`）
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add -A
