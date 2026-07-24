@@ -198,7 +198,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: 无
 - Produces: `PoetSchema / WorkSchema / StopSchema / CityEntrySchema / CitiesFileSchema / DynastyEntrySchema`（zod）及推断类型 `Poet / Work / Stop / CityEntry / CitiesFile / DynastyEntry`；`validatePoet(poet, cities, dynasty): string[]`；`PoetBundle`；`pnpm build:data` CLI
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 
 `scripts/validate.test.ts`:
 
@@ -259,12 +259,12 @@ describe('validatePoet', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 Run: `pnpm vitest run scripts/validate.test.ts`
 Expected: FAIL，`Cannot find module './validate'`
 
-- [ ] **Step 3: 实现 schemas / types / validate / build-data**
+- [x] **Step 3: 实现 schemas / types / validate / build-data**
 
 `src/data/schemas.ts`:
 
@@ -514,12 +514,12 @@ works:
   - { title: 样例诗, year: 726, city: 扬州, genre: 诗, text: 床前明月光。, background: 样例背景, famous: [床前明月光], source: 样例出处 }
 ```
 
-- [ ] **Step 4: 运行测试确认通过 + 校验管线端到端**
+- [x] **Step 4: 运行测试确认通过 + 校验管线端到端**
 
 Run: `pnpm vitest run scripts/validate.test.ts` → 6 个测试全部 PASS
 Run: `pnpm build:data` → 输出 `✓ index.json（0 人）`（_sample.yaml 被跳过）且退出码 0
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A
