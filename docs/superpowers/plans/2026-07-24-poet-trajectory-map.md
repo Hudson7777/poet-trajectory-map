@@ -17,6 +17,7 @@
 - 数据类 subagent 的 prompt 必须原文包含：「搜索任何网络信息时，必须调用 super-search skill，禁止使用 WebSearch 工具（本环境下始终返回空）。WebFetch 只用于已知 URL 的内容提取，不用于搜索。」
 - 底图投影常量全项目唯一：`lon0=72, lat0=54.5, s=25, sy=29`（与已验证 mockup 一致），basemap.svg 与前端投影必须使用同一组常量
 - 构建期数据校验不过则 `pnpm build:data` 退出码非零；禁止绕过校验提交数据
+- 每个 Task 的验证步骤必须包含 `pnpm build`（类型与构建当场暴露，不允许只跑 vitest 就提交）
 - 提交信息结尾带 `Co-Authored-By: Claude <noreply@anthropic.com>`；push 前必须经用户确认
 
 ---
@@ -41,8 +42,9 @@ cd poet-trajectory-map
 pnpm install
 pnpm add react-router-dom d3-zoom d3-selection zod
 pnpm add -D tailwindcss@^3 postcss autoprefixer vitest @testing-library/react @testing-library/jest-dom jsdom yaml tsx @types/d3-zoom @types/d3-selection
-pnpm dlx tailwindcss init -p
 ```
+
+（禁止执行 `pnpm dlx tailwindcss init -p`——dlx 会拉取最新 Tailwind v4，其中已移除 init 命令；配置文件在 Step 2 手写。）
 
 - [ ] **Step 2: 写入配置与入口文件**
 
@@ -56,6 +58,17 @@ export default {
   theme: { extend: {} },
   plugins: [],
 } satisfies Config
+```
+
+`postcss.config.js`:
+
+```js
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
 ```
 
 `vite.config.ts`（合并 vitest 配置）:
@@ -197,6 +210,8 @@ import type { Poet, CityEntry, DynastyEntry } from '../src/data/types'
 const dynasty: DynastyEntry = {
   id: 'tang', name: '唐', era: [618, 907], divisionName: '道',
   basemap: 'geo/tang/basemap.svg', cities: 'geo/tang/cities.yaml',
+  projection: { lon0: 72, lat0: 54.5, s: 25, sy: 29 },
+  viewBox: '0 0 1650 1130',
 }
 const cities: CityEntry[] = [
   { name: '长安', modernName: '西安', lon: 108.94, lat: 34.34, region: '京畿道' },
@@ -274,6 +289,13 @@ export const DynastyEntrySchema = z.object({
   divisionName: z.string().min(1),
   basemap: z.string().min(1),
   cities: z.string().min(1),
+  projection: z.object({
+    lon0: z.number(),
+    lat0: z.number(),
+    s: z.number(),
+    sy: z.number(),
+  }),
+  viewBox: z.string().regex(/^\d+ \d+ \d+ \d+$/),
 })
 export const StopSchema = z.object({
   year: z.number().int(),
@@ -405,6 +427,7 @@ for (const dynasty of registry) {
   const citiesFile = CitiesFileSchema.parse(
     parse(readFileSync(join(root, 'data', dynasty.cities), 'utf8')),
   )
+  const cityMap = Object.fromEntries(citiesFile.cities.map(c => [c.name, c]))
   const poetsDir = join(root, 'data/poets', dynasty.id)
   let files: string[] = []
   try {
@@ -427,7 +450,7 @@ for (const dynasty of registry) {
     }
     const bundle: PoetBundle = {
       poet,
-      cities: Object.fromEntries(citiesFile.cities.map(c => [c.name, c])),
+      cities: cityMap,
     }
     writeFileSync(join(outDir, `${poet.id}.json`), JSON.stringify(bundle, null, 2))
     index.push({
@@ -441,7 +464,8 @@ for (const dynasty of registry) {
 
 if (!failed) {
   writeFileSync(join(root, 'public/data/index.json'), JSON.stringify(index, null, 2))
-  console.log(`✓ index.json（${index.length} 人）`)
+  writeFileSync(join(root, 'public/data/dynasties.json'), JSON.stringify(registry, null, 2))
+  console.log(`✓ index.json（${index.length} 人）+ dynasties.json`)
 } else {
   console.error('数据校验失败')
   process.exit(1)
@@ -457,6 +481,8 @@ if (!failed) {
   divisionName: 道
   basemap: geo/tang/basemap.svg
   cities: geo/tang/cities.yaml
+  projection: { lon0: 72, lat0: 54.5, s: 25, sy: 29 }
+  viewBox: "0 0 1650 1130"
 ```
 
 `data/geo/tang/cities.yaml`（本任务先放 3 城）:
@@ -609,20 +635,18 @@ rivers = re.findall(r'<path d="M[^"]*" fill="none" stroke="#(?:5f7a6e|48655a)"[^
 mountains = re.findall(r'<path d="M[^"]*" fill="none" stroke="#3a332a"[^>]*/>', svg)
 
 out = (
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1650 1130">\n'
-    + defs + '\n'
+    defs + '\n'
     + '<rect width="1650" height="1130" fill="#f6f1e3"/>\n'
     + land + '\n'
     + '\n'.join(rivers) + '\n'
     + '\n'.join(mountains) + '\n'
-    + '</svg>\n'
 )
 open('data/geo/tang/basemap.svg', 'w').write(out)
 print('basemap.svg written')
 ```
 
 Run: `python3 scripts/extract-basemap.py` → 输出 `basemap.svg written`
-说明：v1 底图为写意晕染基底（不承载现代国界语义，brush 位移后仅作水墨意境）；v2 可对照谭图手绘精修唐域示意。
+说明：**basemap.svg 是 SVG 片段（不含外层 `<svg>` 标签）**，viewBox 以 `dynasties.yaml` 的 `viewBox` 字段为准，InkMap 将其注入 `<g>` 内。v1 底图为写意晕染基底（不承载现代国界语义，brush 位移后仅作水墨意境）；v2 可对照谭图手绘精修唐域示意。
 
 - [ ] **Step 2: 写投影失败测试**
 
@@ -763,6 +787,11 @@ export function InkMap({ basemapRaw, viewBox, controllerRef, onZoomChange, child
           select(svgRef.current!).transition().duration(800).call(z.transform as any, t)
         },
       }
+    }
+    return () => {
+      // 卸载时必须移除 d3-zoom 注册的监听器并清空 controller，避免路由切换后泄漏
+      if (svgRef.current) select(svgRef.current).on('.zoom', null)
+      if (controllerRef) controllerRef.current = null
     }
   }, [controllerRef, onZoomChange, viewBox])
 
@@ -987,7 +1016,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 ### Task 6: 人物页状态 + 年表双向联动 + 底部时间轴
 
 **Files:**
-- Create: `src/pages/poet-state.tsx`, `src/components/map/usePoetBundle.ts`, `src/components/map/HeroMap.tsx`, `src/components/sections/TimeSlider.tsx`, `src/components/sections/TimelineSection.tsx`, `src/components/sections/TimelineSection.test.tsx`
+- Create: `src/pages/poet-state.tsx`, `src/components/map/usePoetBundle.ts`, `src/components/map/useDynasty.ts`, `src/components/map/HeroMap.tsx`, `src/components/sections/TimeSlider.tsx`, `src/components/sections/TimelineSection.tsx`, `src/components/sections/TimelineSection.test.tsx`, `src/themes/types.ts`, `src/themes/index.ts`（本任务最小占位，Task 8 替换为完整实现）
 - Modify: `src/pages/PoetPage.tsx`（替换占位）
 
 **Interfaces:**
@@ -1054,16 +1083,24 @@ import type { Stop } from '../data/schemas'
 interface PoetState {
   year: number
   hoveredStop: Stop | null
+  openWork: string | null
   setYear: (y: number) => void
   setHoveredStop: (s: Stop | null) => void
+  setOpenWork: (title: string | null) => void
 }
 
 const Ctx = createContext<PoetState | null>(null)
 
+/** key={poetId} 使用本 Provider 时强制 remount，切换人物后 year/hoveredStop/openWork 全部重置 */
 export function PoetStateProvider({ initialYear, children }: { initialYear: number; children: ReactNode }) {
   const [year, setYear] = useState(initialYear)
   const [hoveredStop, setHoveredStop] = useState<Stop | null>(null)
-  return <Ctx.Provider value={{ year, hoveredStop, setYear, setHoveredStop }}>{children}</Ctx.Provider>
+  const [openWork, setOpenWork] = useState<string | null>(null)
+  return (
+    <Ctx.Provider value={{ year, hoveredStop, openWork, setYear, setHoveredStop, setOpenWork }}>
+      {children}
+    </Ctx.Provider>
+  )
 }
 
 export function usePoetState(): PoetState {
@@ -1073,24 +1110,47 @@ export function usePoetState(): PoetState {
 }
 ```
 
-`src/components/map/usePoetBundle.ts`:
+`src/components/map/usePoetBundle.ts`（区分 loading / error / loaded 三态，spec 第 9 节降级要求）:
 
 ```ts
 import { useEffect, useState } from 'react'
 import type { PoetBundle } from '../../data/types'
 
-export function usePoetBundle(dynasty: string, poetId: string): PoetBundle | null {
-  const [bundle, setBundle] = useState<PoetBundle | null>(null)
+export type BundleState =
+  | { status: 'loading' }
+  | { status: 'error' }
+  | { status: 'loaded'; bundle: PoetBundle }
+
+export function usePoetBundle(dynasty: string, poetId: string, retry = 0): BundleState {
+  const [state, setState] = useState<BundleState>({ status: 'loading' })
   useEffect(() => {
     let cancelled = false
-    setBundle(null)
+    setState({ status: 'loading' })
     fetch(`/data/${dynasty}/${poetId}.json`)
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
-      .then(data => { if (!cancelled) setBundle(data) })
-      .catch(() => { if (!cancelled) setBundle(null) })
+      .then(bundle => { if (!cancelled) setState({ status: 'loaded', bundle }) })
+      .catch(() => { if (!cancelled) setState({ status: 'error' }) })
     return () => { cancelled = true }
-  }, [dynasty, poetId])
-  return bundle
+  }, [dynasty, poetId, retry])
+  return state
+}
+```
+
+`src/components/map/useDynasty.ts`:
+
+```ts
+import { useEffect, useState } from 'react'
+import type { DynastyInfo } from '../../themes/types'
+
+export function useDynasty(dynastyId: string): DynastyInfo | null {
+  const [dynasty, setDynasty] = useState<DynastyInfo | null>(null)
+  useEffect(() => {
+    fetch('/data/dynasties.json')
+      .then(r => r.json())
+      .then((all: DynastyInfo[]) => setDynasty(all.find(d => d.id === dynastyId) ?? null))
+      .catch(() => setDynasty(null))
+  }, [dynastyId])
+  return dynasty
 }
 ```
 
@@ -1146,32 +1206,85 @@ export function TimelineSection({ stops }: { stops: Stop[] }) {
 }
 ```
 
-`src/components/map/HeroMap.tsx`:
+`src/themes/types.ts`（本任务创建完整类型，Task 8 的主题文件与测试直接消费，不存在先后断裂）:
+
+```ts
+export interface EasterEggConfig {
+  id: string
+  type: 'map-node' | 'quote-hover' | 'timeline' | 'decoration' | 'trajectory-style'
+  target?: string
+  style?: 'ink' | 'gold' | 'beacon'
+  trigger?: { yearGte: number }
+}
+
+export interface PoetTheme {
+  accent: string
+  accentSoft: string
+  inkTone: string
+  paperTone: string
+  seal: string
+  motifs: string[]
+  calligraphy: 'liujian' | 'longcang' | 'mashan' | 'zhimang'
+  easterEggs: EasterEggConfig[]
+}
+
+export interface DynastyInfo {
+  id: string
+  name: string
+  era: [number, number]
+  divisionName: string
+  projection: { lon0: number; lat0: number; s: number; sy: number }
+  viewBox: string
+}
+```
+
+`src/themes/index.ts`（本任务最小占位，Task 8 替换为 glob 自动发现版本）:
+
+```ts
+import type { PoetTheme } from './types'
+
+export const poetThemes: Record<string, PoetTheme> = {
+  libai: {
+    accent: '#b8860b', accentSoft: '#d4af37', inkTone: '#2e3340', paperTone: '#e9e8e0',
+    seal: '#9e2b25', motifs: ['moon'], calligraphy: 'liujian', easterEggs: [],
+  },
+}
+export function applyPoetTheme(): void {}
+```
+
+`src/components/map/HeroMap.tsx`（朝代完全数据驱动，无任何 tang 字面量——D10 承诺成立）:
 
 ```tsx
 import { useEffect, useMemo, useRef } from 'react'
 import type { PoetBundle } from '../../data/types'
-import type { PoetTheme } from '../../themes/types'
+import type { DynastyInfo, PoetTheme } from '../../themes/types'
 import { usePoetState } from '../../pages/poet-state'
 import { InkMap, type InkMapController } from './InkMap'
 import { Trajectory } from './Trajectory'
 import { CityMarker } from './CityMarker'
 import { WorkMarker } from './WorkMarker'
-import { createProjection, visibleStops, TANG_PROJECTION } from './projection'
-import basemapRaw from '../../../data/geo/tang/basemap.svg?raw'
+import { createProjection, visibleStops } from './projection'
+
+const basemapModules = import.meta.glob('../../../data/geo/*/basemap.svg', {
+  query: '?raw',
+  eager: true,
+  import: 'default',
+}) as Record<string, string>
 
 interface HeroMapProps {
   bundle: PoetBundle
   theme: PoetTheme
+  dynasty: DynastyInfo
 }
 
-export function HeroMap({ bundle, theme }: HeroMapProps) {
-  const { year, hoveredStop, setHoveredStop } = usePoetState()
+export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
+  const { year, hoveredStop, setHoveredStop, setOpenWork } = usePoetState()
   const controllerRef = useRef<InkMapController | null>(null)
-  const project = useMemo(
-    () => createProjection(TANG_PROJECTION.lon0, TANG_PROJECTION.lat0, TANG_PROJECTION.s, TANG_PROJECTION.sy),
-    [],
-  )
+  const project = useMemo(() => {
+    const p = dynasty.projection
+    return createProjection(p.lon0, p.lat0, p.s, p.sy)
+  }, [dynasty])
+  const basemapRaw = basemapModules[`../../../data/geo/${dynasty.id}/basemap.svg`] ?? ''
   const visible = visibleStops(bundle.poet.stops, year)
 
   useEffect(() => {
@@ -1183,15 +1296,15 @@ export function HeroMap({ bundle, theme }: HeroMapProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
 
-  const trajectoryStyle = theme.easterEggs.some(e => e.id === 'beacon-trajectory')
-    ? (year >= 755 ? 'beacon' : 'ink')
-    : theme.easterEggs.some(e => e.id === 'gold-trajectory')
-      ? 'gold'
-      : 'ink'
+  // 轨迹样式：通用读取 trajectory-style 彩蛋配置，不认识具体彩蛋 id
+  const styleEgg = theme.easterEggs.find(e => e.type === 'trajectory-style')
+  const trajectoryStyle = styleEgg?.trigger?.yearGte !== undefined
+    ? (year >= styleEgg.trigger.yearGte ? styleEgg.style ?? 'ink' : 'ink')
+    : styleEgg?.style ?? 'ink'
 
   return (
     <section className="hero-map">
-      <InkMap basemapRaw={basemapRaw} viewBox="0 0 1650 1130" controllerRef={controllerRef}>
+      <InkMap basemapRaw={basemapRaw} viewBox={dynasty.viewBox} controllerRef={controllerRef}>
         <Trajectory stops={bundle.poet.stops} cities={bundle.cities} project={project} year={year} style={trajectoryStyle} />
         {visible.map(stop => {
           const c = bundle.cities[stop.city]
@@ -1214,9 +1327,7 @@ export function HeroMap({ bundle, theme }: HeroMapProps) {
               key={`${work.title}-${work.year}`}
               work={work}
               position={[x + 12, y - 12]}
-              onOpen={() => {
-                document.getElementById(`work-${work.title}`)?.scrollIntoView({ behavior: 'smooth' })
-              }}
+              onOpen={w => setOpenWork(w.title)}
             />
           )
         })}
@@ -1226,26 +1337,43 @@ export function HeroMap({ bundle, theme }: HeroMapProps) {
 }
 ```
 
-`src/pages/PoetPage.tsx` 替换占位为:
+`src/pages/PoetPage.tsx` 替换占位为（含 error 态重试与降级、key 强制重置）:
 
 ```tsx
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { usePoetBundle } from '../components/map/usePoetBundle'
+import { useDynasty } from '../components/map/useDynasty'
 import { PoetStateProvider } from './poet-state'
 import { HeroMap } from '../components/map/HeroMap'
 import { TimeSlider } from '../components/sections/TimeSlider'
 import { TimelineSection } from '../components/sections/TimelineSection'
-import { poetThemes } from '../themes'
+import { poetThemes, applyPoetTheme } from '../themes'
 
 export function PoetPage() {
   const { dynasty, poetId } = useParams<{ dynasty: string; poetId: string }>()
-  const bundle = usePoetBundle(dynasty!, poetId!)
-  if (!bundle) return <main className="loading">加载中…</main>
+  const [retry, setRetry] = useState(0)
+  const state = usePoetBundle(dynasty!, poetId!, retry)
+  const dynastyInfo = useDynasty(dynasty!)
   const theme = poetThemes[poetId!] ?? poetThemes.libai
+  useEffect(() => { applyPoetTheme(theme, poetId!) }, [theme, poetId])
+
+  if (state.status === 'error') {
+    return (
+      <main className="load-error">
+        <p>人物数据加载失败。</p>
+        <button onClick={() => setRetry(r => r + 1)}>重试</button>
+      </main>
+    )
+  }
+  if (state.status === 'loading' || !dynastyInfo) {
+    return <main className="loading">加载中…</main>
+  }
+  const { bundle } = state
   return (
-    <PoetStateProvider initialYear={bundle.poet.death.year}>
+    <PoetStateProvider key={poetId} initialYear={bundle.poet.death.year}>
       <main className="poet-page">
-        <HeroMap bundle={bundle} theme={theme} />
+        <HeroMap bundle={bundle} theme={theme} dynasty={dynastyInfo} />
         <TimeSlider min={bundle.poet.birth.year} max={bundle.poet.death.year} />
         <TimelineSection stops={bundle.poet.stops} />
       </main>
@@ -1253,8 +1381,6 @@ export function PoetPage() {
   )
 }
 ```
-
-（`src/themes/index.ts` 在 Task 8 创建；本任务先建最小占位 `src/themes/index.ts`：`export const poetThemes: Record<string, any> = { libai: { easterEggs: [] } }`，Task 8 替换。`src/themes/types.ts` 同样在 Task 8 创建，本任务 HeroMap 的 `theme: any` 通过。）
 
 - [ ] **Step 4: 测试通过 + 视觉验证**
 
@@ -1292,6 +1418,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { SummarySection } from './SummarySection'
 import { QuotesSection } from './QuotesSection'
 import { WorksSection } from './WorksSection'
+import { PoetStateProvider } from '../../pages/poet-state'
 import type { Poet, Work } from '../../data/schemas'
 
 const works: Work[] = [
@@ -1321,7 +1448,11 @@ describe('QuotesSection', () => {
 
 describe('WorksSection', () => {
   it('点击作品卡展开全文与背景', () => {
-    render(<WorksSection works={works} />)
+    render(
+      <PoetStateProvider initialYear={762}>
+        <WorksSection works={works} />
+      </PoetStateProvider>,
+    )
     fireEvent.click(screen.getByText('《静夜思》'))
     expect(screen.getByText('床前明月光，疑是地上霜。')).toBeTruthy()
   })
@@ -1388,26 +1519,33 @@ export function QuotesSection({ works }: { works: Work[] }) {
 }
 ```
 
-`src/components/sections/WorksSection.tsx`:
+`src/components/sections/WorksSection.tsx`（展开状态走 PoetState.openWork，地图作品标记与卡片通过 Context 联动，无 DOM id 契约）:
 
 ```tsx
-import { useState } from 'react'
+import { useEffect } from 'react'
 import type { Work } from '../../data/schemas'
+import { usePoetState } from '../../pages/poet-state'
 
 export function WorksSection({ works }: { works: Work[] }) {
-  const [open, setOpen] = useState<string | null>(null)
+  const { openWork, setOpenWork } = usePoetState()
+
+  useEffect(() => {
+    if (!openWork) return
+    document.getElementById(`work-${openWork}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [openWork])
+
   return (
     <section className="works-section">
       <h2 className="section-title">作品集</h2>
       {works.map(w => (
         <article key={`${w.title}-${w.year}`} id={`work-${w.title}`} className="work-card mounted-card">
-          <header onClick={() => setOpen(open === w.title ? null : w.title)}>
+          <header onClick={() => setOpenWork(openWork === w.title ? null : w.title)}>
             <span className="work-year font-calligraphy">{w.year}</span>
             <h3>《{w.title}》</h3>
             <span className="work-city">{w.city}</span>
             <span className="work-genre">{w.genre}</span>
           </header>
-          {open === w.title && (
+          {openWork === w.title && (
             <div className="work-detail">
               <p className="work-text">{w.text}</p>
               <p className="work-background">{w.background}</p>
@@ -1449,8 +1587,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 ### Task 8: 主题系统（七类 token + 书法字体 + 色调流转）
 
 **Files:**
-- Create: `src/themes/types.ts`, `src/themes/index.ts`, `src/themes/poets/libai.ts`, `src/themes/poets/dufu.ts`, `src/themes/poets/wangwei.ts`, `src/themes/poets/menghaoran.ts`, `src/themes/poets/baijuyi.ts`, `src/themes/themes.test.ts`
-- Modify: `src/themes/base.css`, `src/pages/PoetPage.tsx`（应用主题）
+- Create: `src/themes/poets/libai.ts`, `src/themes/poets/dufu.ts`, `src/themes/poets/wangwei.ts`, `src/themes/poets/menghaoran.ts`, `src/themes/poets/baijuyi.ts`, `src/themes/themes.test.ts`
+- Modify: `src/themes/index.ts`（替换 Task 6 占位为 glob 自动发现 + applyPoetTheme 完整实现）, `src/themes/base.css`
 
 **Interfaces:**
 - Consumes: 无
@@ -1468,10 +1606,14 @@ import type { PoetTheme } from './types'
 const REQUIRED_TOKENS: (keyof PoetTheme)[] = ['accent', 'accentSoft', 'inkTone', 'paperTone', 'seal', 'motifs', 'calligraphy']
 
 describe('poetThemes', () => {
-  it.each(['libai', 'dufu', 'wangwei', 'menghaoran', 'baijuyi'])('%s 主题七类 token 齐全', id => {
+  it.each(Object.keys(poetThemes))('%s 主题七类 token 齐全', id => {
     const theme = poetThemes[id]
     for (const key of REQUIRED_TOKENS) expect(theme[key], key).toBeTruthy()
-    expect(theme.easterEggs.length).toBeGreaterThanOrEqual(3)
+    expect(theme.motifs.length).toBeGreaterThan(0)
+    expect(theme.easterEggs.length).toBeGreaterThanOrEqual(2)
+  })
+  it('自动发现五人主题', () => {
+    expect(Object.keys(poetThemes).sort()).toEqual(['baijuyi', 'dufu', 'libai', 'menghaoran', 'wangwei'])
   })
 })
 
@@ -1529,7 +1671,7 @@ export const libaiTheme: PoetTheme = {
   calligraphy: 'liujian',
   easterEggs: [
     { id: 'catch-moon', type: 'map-node', target: '当涂' },
-    { id: 'gold-trajectory', type: 'decoration' },
+    { id: 'gold-trajectory', type: 'trajectory-style', style: 'gold' },
     { id: 'westward-suiye', type: 'decoration' },
     { id: 'hanlin-seal', type: 'timeline', target: '742' },
   ],
@@ -1551,7 +1693,7 @@ export const dufuTheme: PoetTheme = {
   motifs: ['beacon', 'hut', 'boat'],
   calligraphy: 'longcang',
   easterEggs: [
-    { id: 'beacon-trajectory', type: 'decoration' },
+    { id: 'beacon-trajectory', type: 'trajectory-style', style: 'beacon', trigger: { yearGte: 755 } },
     { id: 'straw-hut-hover', type: 'map-node', target: '成都' },
     { id: 'snow-mountain', type: 'decoration' },
   ],
@@ -1623,23 +1765,20 @@ export const baijuyiTheme: PoetTheme = {
 }
 ```
 
-`src/themes/index.ts`（替换 Task 6 占位）:
+`src/themes/index.ts`（替换 Task 6 占位；glob 自动发现主题，新增人物只放一个 `src/themes/poets/<new>.ts` 文件即生效）:
 
 ```ts
 import type { PoetTheme } from './types'
-import { libaiTheme } from './poets/libai'
-import { dufuTheme } from './poets/dufu'
-import { wangweiTheme } from './poets/wangwei'
-import { menghaoranTheme } from './poets/menghaoran'
-import { baijuyiTheme } from './poets/baijuyi'
 
-export const poetThemes: Record<string, PoetTheme> = {
-  libai: libaiTheme,
-  dufu: dufuTheme,
-  wangwei: wangweiTheme,
-  menghaoran: menghaoranTheme,
-  baijuyi: baijuyiTheme,
-}
+const modules = import.meta.glob('./poets/*.ts', { eager: true }) as Record<string, Record<string, PoetTheme>>
+
+export const poetThemes: Record<string, PoetTheme> = Object.fromEntries(
+  Object.entries(modules).flatMap(([path, mod]) => {
+    const id = path.replace('./poets/', '').replace('.ts', '')
+    const theme = Object.values(mod)[0]
+    return theme ? [[id, theme]] : []
+  }),
+)
 
 export const CALLIGRAPHY_FONTS: Record<PoetTheme['calligraphy'], string> = {
   liujian: '"Liu Jian Mao Cao"',
@@ -1671,13 +1810,7 @@ export function applyPoetTheme(theme: PoetTheme, poetId: string): void {
 .work-text { white-space: pre-line; line-height: 2; }
 ```
 
-`src/pages/PoetPage.tsx` 在 `const theme = ...` 后追加:
-
-```tsx
-  useEffect(() => { applyPoetTheme(theme, poetId!) }, [theme, poetId])
-```
-
-（顶部追加 `import { useEffect } from 'react'` 与 `import { applyPoetTheme } from '../themes'`，`poetThemes` import 改为 `import { poetThemes, applyPoetTheme } from '../themes'`。）
+（PoetPage 的 `applyPoetTheme` 调用已在 Task 6 的最终代码中包含，此处无需改动。）
 
 - [ ] **Step 4: 测试通过 + 视觉验证**
 
@@ -1698,7 +1831,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 ### Task 9: 意象符号 + 彩蛋框架 + 五人物彩蛋
 
 **Files:**
-- Create: `src/themes/motifs/MotifIcon.tsx`（moon/wine/lotus/sword/beacon/hut/boat/bamboo/mountain/qin/peach/spring-rain/apricot/lute/incense-peak 共 14 个 SVG 小图标）, `src/themes/easter-eggs/registry.tsx`, `src/themes/easter-eggs/CatchMoon.tsx`, `src/themes/easter-eggs/BeaconTrajectory.tsx`, `src/themes/easter-eggs/GoldTrajectory.tsx`, `src/themes/easter-eggs/HanlinSeal.tsx`, `src/themes/easter-eggs/StrawHutHover.tsx`, `src/themes/easter-eggs/BambooSway.tsx`, `src/themes/easter-eggs/MountainRipple.tsx`, `src/themes/easter-eggs/FallingPetals.tsx`, `src/themes/easter-eggs/LuteNotes.tsx`, `src/themes/easter-eggs/WestwardSuiye.tsx`, `src/themes/easter-eggs/registry.test.tsx`
+- Create: `src/themes/motifs/MotifIcon.tsx`（moon/wine/lotus/sword/beacon/hut/boat/bamboo/mountain/qin/peach/spring-rain/apricot/lute/incense-peak 共 14 个 SVG 小图标）, `src/themes/easter-eggs/registry.tsx`, `src/themes/easter-eggs/CatchMoon.tsx`, `src/themes/easter-eggs/HanlinSeal.tsx`, `src/themes/easter-eggs/StrawHutHover.tsx`, `src/themes/easter-eggs/BambooSway.tsx`, `src/themes/easter-eggs/MountainRipple.tsx`, `src/themes/easter-eggs/FallingPetals.tsx`, `src/themes/easter-eggs/LuteNotes.tsx`, `src/themes/easter-eggs/LakeLevel.tsx`, `src/themes/easter-eggs/WestwardSuiye.tsx`, `src/themes/easter-eggs/registry.test.tsx`
 - Modify: `src/components/map/HeroMap.tsx`（渲染 decoration/map-node 彩蛋）, `src/components/sections/QuotesSection.tsx`（渲染 quote-hover 彩蛋）, `src/components/sections/TimelineSection.tsx`（渲染 timeline 彩蛋）
 
 **Interfaces:**
@@ -1774,13 +1907,12 @@ export function MotifIcon({ name, size = 40 }: { name: string; size?: number }) 
 }
 ```
 
-`src/themes/easter-eggs/registry.tsx`:
+`src/themes/easter-eggs/registry.tsx`（彩蛋位置由 HeroMap 经 `project()` 动态解析，组件内禁止硬编码坐标）:
 
 ```tsx
 import type { ReactElement } from 'react'
 import type { EasterEggConfig } from '../types'
 import { CatchMoon } from './CatchMoon'
-import { GoldTrajectory } from './GoldTrajectory'
 import { WestwardSuiye } from './WestwardSuiye'
 import { HanlinSeal } from './HanlinSeal'
 import { StrawHutHover } from './StrawHutHover'
@@ -1788,10 +1920,10 @@ import { BambooSway } from './BambooSway'
 import { MountainRipple } from './MountainRipple'
 import { FallingPetals } from './FallingPetals'
 import { LuteNotes } from './LuteNotes'
+import { LakeLevel } from './LakeLevel'
 
-export const easterEggComponents: Record<string, (props: { target?: string }) => ReactElement | null> = {
+export const easterEggComponents: Record<string, (props: { target?: string; position?: [number, number] }) => ReactElement | null> = {
   'catch-moon': CatchMoon,
-  'gold-trajectory': GoldTrajectory,
   'westward-suiye': WestwardSuiye,
   'hanlin-seal': HanlinSeal,
   'straw-hut-hover': StrawHutHover,
@@ -1799,71 +1931,81 @@ export const easterEggComponents: Record<string, (props: { target?: string }) =>
   'mountain-ripple': MountainRipple,
   'falling-petals': FallingPetals,
   'lute-notes': LuteNotes,
+  'lake-level': LakeLevel,
 }
 
-const SCOPE_MAP: Record<EasterEggConfig['type'], string> = {
+const SCOPE_MAP: Partial<Record<EasterEggConfig['type'], string>> = {
   'map-node': 'map',
   decoration: 'map',
   'quote-hover': 'quote',
   timeline: 'timeline',
+  // 'trajectory-style' 不在此渲染，由 HeroMap 通用处理
 }
 
-export function renderEasterEggs(configs: EasterEggConfig[], scope: 'map' | 'quote' | 'timeline') {
+export function renderEasterEggs(
+  configs: EasterEggConfig[],
+  scope: 'map' | 'quote' | 'timeline',
+  resolvePosition?: (cityName: string) => [number, number] | undefined,
+) {
   return configs
     .filter(c => SCOPE_MAP[c.type] === scope)
     .map(c => {
       const C = easterEggComponents[c.id]
-      return C ? <C key={c.id} target={c.target} /> : null
+      if (!C) return null
+      const position = c.target ? resolvePosition?.(c.target) : undefined
+      return <C key={c.id} target={c.target} position={position} />
     })
 }
 ```
 
 两个代表性彩蛋完整实现：
 
-`src/themes/easter-eggs/CatchMoon.tsx`（当涂江面水中捉月：月影随鼠标轻晃）:
+`src/themes/easter-eggs/CatchMoon.tsx`（当涂江面水中捉月：月影随鼠标轻晃；position 由 HeroMap 经 project() 解析传入）:
 
 ```tsx
 import { useState } from 'react'
 
-/** 挂在地图坐标系内（当涂投影位置 x=1162.8, y=666.1，由 TANG_PROJECTION 算出） */
-export function CatchMoon() {
+export function CatchMoon({ position }: { position?: [number, number] }) {
   const [offset, setOffset] = useState(0)
+  if (!position) return null
+  const [x, y] = position
   return (
-    <g
-      onMouseMove={e => setOffset(((e.clientX % 40) - 20) / 10)}
-      className="catch-moon"
-    >
-      <ellipse cx={1162.8 + offset * 3} cy={700} rx={26} ry={7} fill="#d4af37" opacity={0.5}>
+    <g onMouseMove={e => setOffset(((e.clientX % 40) - 20) / 10)} className="catch-moon">
+      <ellipse cx={x + offset * 3} cy={y + 34} rx={26} ry={7} fill="#d4af37" opacity={0.5}>
         <animate attributeName="opacity" values="0.5;0.3;0.5" dur="4s" repeatCount="indefinite" />
       </ellipse>
-      <circle cx={1162.8 + offset * 3} cy={666} r={14} fill="#e8e4d8" stroke="#b8860b" strokeWidth={1.5} opacity={0.9} />
+      <circle cx={x + offset * 3} cy={y} r={14} fill="#e8e4d8" stroke="#b8860b" strokeWidth={1.5} opacity={0.9} />
       <title>当涂 · 捉月传说</title>
     </g>
   )
 }
 ```
 
-`src/themes/easter-eggs/BeaconTrajectory.tsx`（755 年起轨迹变烽烟质感，在 HeroMap 中通过 style='beacon' 实现，此组件为说明性空组件 + CSS）:
+`src/themes/easter-eggs/LakeLevel.tsx`（孟浩然「八月湖水平」，岳阳点呼吸水波）:
 
 ```tsx
-export function BeaconTrajectory() {
-  // 烽烟轨迹由 HeroMap 根据年份切换 trajectory-beacon 样式实现（见 HeroMap.trajectoryStyle）
-  return null
+export function LakeLevel({ position }: { position?: [number, number] }) {
+  if (!position) return null
+  const [x, y] = position
+  return (
+    <ellipse cx={x} cy={y + 18} rx={30} ry={6} fill="none" stroke="#7a9b62" strokeWidth={1.5} className="lake-level" />
+  )
 }
 ```
 
-其余彩蛋均为轻量 CSS/SVG 装饰组件，模式相同（每个 ≤ 15 行）:
+（配 base.css `.lake-level { animation: lake-breathe 4s ease-in-out infinite } @keyframes lake-breathe { 0%,100% { opacity: .4 } 50% { opacity: .8 } }`；金色/烽烟轨迹已由 HeroMap 的 `trajectory-style` 彩蛋类型通用处理，不再单独设组件。）
 
-- `GoldTrajectory.tsx`: 返回 null（金色轨迹由 HeroMap style='gold' 实现）
+其余彩蛋均为轻量 CSS/SVG 装饰组件，模式相同（每个 ≤ 15 行，需要位置的同样用 `position` prop）:
+
 - `WestwardSuiye.tsx`: `<text x={60} y={560} className="westward-suiye">西域万里 · 碎叶 →</text>`（配 base.css `.westward-suiye { font-size: 18px; fill: var(--accent); opacity: .7 }`）
 - `HanlinSeal.tsx`: `<g>` 内 `<rect width={64} height={64} rx={8} fill="var(--seal)"/> + <text>` 翰林供奉（竖排两字两行，class `hanlin-seal`），仅当 `usePoetState().year >= Number(target)` 时渲染
-- `StrawHutHover.tsx`: `<path d="M-10,0 L0,-12 L10,0 Z" className="straw-hut"/>` 置于成都投影点 (801.8, 789.5)，hover 时 CSS `transform: rotateX(60deg)` 掀顶动画
-- `BambooSway.tsx`: 两组 `<path>` 竹节（同 MotifIcon bamboo 路径放大 3 倍）置于辋川投影点 (933, 761.7)，CSS `@keyframes sway { 0%,100% { transform: rotate(-2deg) } 50% { transform: rotate(2deg) } }`，`transform-origin: bottom center`，4s 循环
-- `MountainRipple.tsx`: `<circle>` 于辋川点，`onClick` 时添加 `.rippling` class（CSS `@keyframes ripple { from { r: 10; opacity: .6 } to { r: 80; opacity: 0 } }`），800ms 后移除
+- `StrawHutHover.tsx`: `<path d="M-10,0 L0,-12 L10,0 Z" className="straw-hut"/>` 置于 `position` 传入的成都点，hover 时 CSS `transform: rotateX(60deg)` 掀顶动画
+- `BambooSway.tsx`: 两组 `<path>` 竹节（同 MotifIcon bamboo 路径放大 3 倍）置于 `position` 传入的辋川点，CSS `@keyframes sway { 0%,100% { transform: rotate(-2deg) } 50% { transform: rotate(2deg) } }`，`transform-origin: bottom center`，4s 循环
+- `MountainRipple.tsx`: `<circle>` 于 `position` 传入的辋川点，`onClick` 时添加 `.rippling` class（CSS `@keyframes ripple { from { r: 10; opacity: .6 } to { r: 80; opacity: 0 } }`），800ms 后移除
 - `FallingPetals.tsx`: 6 个 `<span className="petal">` 绝对定位于 QuotesSection 容器，CSS `@keyframes fall { to { transform: translateY(120px) rotate(40deg); opacity: 0 } }`，各自 animation-delay 0-3s
-- `LuteNotes.tsx`: 3 个 `<text>♪</text>` 于浔阳投影点 (1000, 744.4)，CSS `@keyframes float-note { to { transform: translateY(-30px); opacity: 0 } }`，3s 循环错位
+- `LuteNotes.tsx`: 3 个 `<text>♪</text>` 于 `position` 传入的浔阳点，CSS `@keyframes float-note { to { transform: translateY(-30px); opacity: 0 } }`，3s 循环错位
 
-`HeroMap.tsx` 在 `</Trajectory>` 前插入 `{renderEasterEggs(theme.easterEggs, 'map')}`；`QuotesSection.tsx` 容器内插入 `{renderEasterEggs(poetThemes[poetId].easterEggs, 'quote')}`（需新增 `poetId` prop，PoetPage 传入）；`TimelineSection.tsx` 插入 `{renderEasterEggs(poetThemes[poetId].easterEggs, 'timeline')}`（同样新增 `poetId` prop）。
+`HeroMap.tsx` 在 `<Trajectory>` 后插入 `{renderEasterEggs(theme.easterEggs, 'map', city => { const c = bundle.cities[city]; return c ? project(c.lon, c.lat) : undefined })}`；`QuotesSection.tsx` 与 `TimelineSection.tsx` 各新增 `poetId` prop（PoetPage 传入），容器内分别插入 `{renderEasterEggs(poetThemes[poetId].easterEggs, 'quote')}` 与 `{renderEasterEggs(poetThemes[poetId].easterEggs, 'timeline')}`。
 
 - [ ] **Step 4: 测试通过 + 视觉验证**
 
@@ -1900,7 +2042,7 @@ export function PaperTexture() {
   return (
     <svg className="paper-texture-svg" aria-hidden="true">
       <filter id="paper-noise">
-        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="n" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="n" />
         <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.85, 0 0 0 0 0.8, 0 0 0 0 0.7, 0 0 0 0.06 0" />
       </filter>
       <rect width="100%" height="100%" filter="url(#paper-noise)" />
@@ -2062,7 +2204,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 - [ ] **Step 1: 骨架轮**
 
-资料源：《旧唐书·杜甫传》《新唐书·杜甫传》、仇兆鳌《杜诗详注》。已知锚点（须逐条核对）：712 生巩县；731-741 漫游吴越（金陵、越州）与齐赵（泰山、兖州）;746 长安应试不第（李林甫「野无遗贤」）;751 献三大礼赋；755 授河西尉不赴、改右卫率府胄曹参军；755 安史乱起；756 陷贼、奔凤翔授左拾遗；758 贬华州司功参军；759 弃官，秦州→同谷→成都；760 营草堂于成都；762-764 避乱梓州/阆州；765 严武荐检校工部员外郎；766-768 居夔州；768 出峡，江陵→岳阳；769 潭州；770 卒于潭岳间舟中（耒阳，卒地有说可标 uncertain）。
+资料源：《旧唐书·杜甫传》《新唐书·杜甫传》、仇兆鳌《杜诗详注》。已知锚点（须逐条核对）：712 生巩县；731-741 漫游吴越（金陵、越州）与齐赵（泰山、兖州）;746 长安应试不第（李林甫「野无遗贤」）;751 献三大礼赋；755 授河西尉不赴、改右卫率府胄曹参军；755 安史乱起；756 长安陷贼；757 奔凤翔授左拾遗；758 贬华州司功参军；759 弃官，秦州→同谷→成都；760 营草堂于成都；762-764 避乱梓州/阆州；765 严武荐检校工部员外郎；766-768 居夔州；768 出峡，江陵→岳阳；769 潭州；770 卒于潭岳间舟中（耒阳，卒地有说可标 uncertain）。
 
 - [ ] **Step 2: 作品轮**
 
@@ -2231,7 +2373,7 @@ git tag v0.1.0
 
 ## Self-Review 记录
 
-- **Spec coverage**:spec 第 3 节架构（Task 1/2）、第 4 节数据模型（Task 2/3）、第 5 节底图与交互（Task 4/5）、第 6 节页面结构（Task 6/7/10）、第 7 节主题系统（Task 8/9）、第 8 节考证流程（Task 11-15）、第 9 节错误处理（Task 2 构建校验 + Task 10 字体 fallback + Task 16 走查）、第 10 节测试策略（各任务 TDD + Task 16 验收）——全覆盖。
-- **类型一致性**:`PoetBundle`（Task 2）→ HeroMap/PoetPage（Task 6）一致；`PoetTheme`（Task 8）→ HeroMap（Task 6 已用 `theme: PoetTheme`，Task 6 占位 index.ts 在 Task 8 替换）一致；`EasterEggConfig`（Task 8）→ registry（Task 9）一致；`PoetIndexEntry`（Task 2 build-data 产出）→ OverviewPage（Task 10）一致。
-- **遗留说明**：孟浩然主题 easterEggs 为 2 个（plan 已定 `falling-petals` + `lake-level`）,themes.test.ts 断言 `>= 3` 需改为 `>= 2`——执行 Task 8 Step 3 时将测试断言改为 `toBeGreaterThanOrEqual(2)`;`lake-level` 彩蛋组件未在 registry 中实现，执行 Task 9 时按「其余彩蛋」模式补 `LakeLevel.tsx`（岳阳点 (828.1, 754.1) 画水波椭圆，CSS 呼吸动画）。
+- **Spec coverage**:spec 第 3 节架构（Task 1/2）、第 4 节数据模型（Task 2/3）、第 5 节底图与交互（Task 4/5）、第 6 节页面结构（Task 6/7/10）、第 7 节主题系统（Task 8/9）、第 8 节考证流程（Task 11-15）、第 9 节错误处理（Task 2 构建校验 + Task 6 error 态降级 + Task 10 字体 fallback + Task 16 走查）、第 10 节测试策略（各任务 TDD + Task 16 验收）——全覆盖。
+- **类型一致性**:`src/themes/types.ts` 在 Task 6 创建（PoetTheme/EasterEggConfig/DynastyInfo）,Task 6 占位 index.ts 与 Task 8 完整实现共用同一类型源；`PoetBundle`（Task 2）→ HeroMap/PoetPage（Task 6）一致；`EasterEggConfig`（Task 6）→ registry（Task 9）一致；`PoetIndexEntry`（Task 2 build-data 产出）→ OverviewPage（Task 10）一致。
+- **Critic 复审修订（2026-07-24,critic-glm CONCERN + critic-claude 发现已逐条裁决）**:①types.ts 挪入 Task 6 消除先后断裂；②DynastyEntrySchema 增加 projection/viewBox,HeroMap 改为 `import.meta.glob` 朝代数据驱动（D10 零改动承诺成立）;③extract-basemap.py 只输出 SVG 片段，消除非法嵌套；④InkMap 补 d3-zoom cleanup;⑤彩蛋位置由 HeroMap 经 project() 动态解析，禁止硬编码坐标；⑥PoetStateProvider 加 key={poetId} 强制重置；⑦themes/index.ts 改 glob 自动发现；⑧轨迹样式改 trajectory-style 配置类型；⑨作品联动改 openWork Context;⑩usePoetBundle 三态 + 重试降级;⑪删除 `pnpm dlx tailwindcss init -p`(dlx 拉 v4 无 init);⑫PaperTexture numOctaves 降为 2;⑬build-data 城市查找表提到朝代层 + 输出 dynasties.json;⑭杜甫锚点拆分 756 陷贼/757 授左拾遗；⑮每个 Task 末尾强制 `pnpm build`。
 

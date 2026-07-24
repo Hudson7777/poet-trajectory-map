@@ -79,6 +79,8 @@ YAML 源文件 → `pnpm build:data` 校验编译 → `public/data/*.json` → �
   divisionName: 道                 # 唐=道，宋=路，元=行省，明=布政使司
   basemap: geo/tang/basemap.svg
   cities: geo/tang/cities.yaml
+  projection: { lon0: 72, lat0: 54.5, s: 25, sy: 29 }   # 每朝独立投影常量，渲染层数据驱动
+  viewBox: "0 0 1650 1130"
 ```
 
 ### 人物源文件（data/poets/tang/libai.yaml）
