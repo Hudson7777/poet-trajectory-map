@@ -831,7 +831,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: `Projection`、`buildTrajectoryPath`、`visibleStops`、`PoetBundle`、`Stop`、`Work`
 - Produces: `<Trajectory stops cities project year style>`（style: 'ink'|'gold'|'beacon'，Task 9 彩蛋复用）、`<CityMarker stop position highlighted dimmed onHover>`、`<WorkMarker work position onOpen>`
 
-- [ ] **Step 1: 写组件测试（jsdom）**
+- [x] **Step 1: 写组件测试（jsdom）**
 
 `src/components/map/markers.test.tsx`:
 
@@ -891,12 +891,12 @@ describe('CityMarker', () => {
 })
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `pnpm vitest run src/components/map/markers.test.tsx`
 Expected: FAIL，`Cannot find module './Trajectory'`
 
-- [ ] **Step 3: 实现三个组件**
+- [x] **Step 3: 实现三个组件**
 
 `src/components/map/Trajectory.tsx`:
 
@@ -998,11 +998,11 @@ export function WorkMarker({ work, position, onOpen }: WorkMarkerProps) {
 .city-marker, .work-marker { cursor: pointer; transition: opacity .3s; }
 ```
 
-- [ ] **Step 4: 测试通过**
+- [x] **Step 4: 测试通过**
 
 Run: `pnpm vitest run src/components/map/markers.test.tsx` → 全部 PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A
