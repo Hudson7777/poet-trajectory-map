@@ -59,3 +59,41 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 
 .quotes-section { position: relative; }
 .timeline-section { position: relative; }
+
+/* ===== 总览页 / 纸纹 / 托裱卡片 / 移动端 ===== */
+.paper-texture-svg { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.overview, .poet-page { position: relative; z-index: 1; }
+.site-title { font-size: 44px; letter-spacing: 14px; text-align: center; margin: 40px 0 24px; }
+.dynasty-switcher { display: flex; gap: 24px; justify-content: center; margin-bottom: 40px; }
+.dynasty { font-size: 24px; padding: 4px 16px; }
+.dynasty.active { border-bottom: 3px solid var(--seal); font-weight: bold; }
+.dynasty.disabled { opacity: .35; cursor: not-allowed; }
+.poet-wall { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; padding: 0 40px 40px; }
+.poet-card { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); }
+.poet-name { font-size: 32px; }
+.poet-years { opacity: .6; font-size: 14px; }
+.poet-quote { font-size: 15px; opacity: .75; }
+.project-note { text-align: center; font-size: 13px; opacity: .55; padding: 24px 40px 48px; line-height: 1.8; }
+.time-slider-wrap { display: flex; align-items: center; gap: 16px; padding: 8px 40px; }
+.time-slider { flex: 1; accent-color: var(--accent); }
+.time-slider-year { font-size: 28px; min-width: 90px; }
+.timeline-section ol { list-style: none; padding: 0 40px; }
+.timeline-section li { display: flex; gap: 16px; padding: 10px 12px; border-left: 3px solid transparent; cursor: pointer; }
+.timeline-section li.active, .timeline-section li:hover { border-left-color: var(--accent); background: rgba(0,0,0,.04); }
+.tl-year { min-width: 64px; font-size: 22px; color: var(--seal); }
+.tl-role { margin-left: auto; opacity: .6; font-size: 14px; }
+.tl-uncertain { color: var(--seal); font-size: 12px; border: 1px dashed var(--seal); padding: 0 4px; border-radius: 3px; }
+.stats { display: flex; gap: 32px; padding: 0 40px 24px; }
+.stat-value { font-size: 40px; color: var(--accent); }
+.stat-label { font-size: 14px; opacity: .6; }
+.review { padding: 0 40px 24px; line-height: 2; max-width: 78ch; }
+.quotes { display: flex; gap: 48px; padding: 0 40px 32px; min-height: 260px; align-items: flex-start; }
+.quote cite { display: block; margin-top: 12px; font-size: 13px; opacity: .5; }
+.works-section { padding: 0 40px 64px; }
+.hero-map .ink-map { width: 100%; height: 78vh; display: block; }
+@media (max-width: 768px) {
+  .hero-map .ink-map { height: 60vh; }
+  .site-title { font-size: 30px; letter-spacing: 8px; }
+  .quotes { gap: 20px; overflow-x: auto; }
+  .stats { flex-wrap: wrap; gap: 16px; }
+}
