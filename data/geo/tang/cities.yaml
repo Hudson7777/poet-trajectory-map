@@ -1,5 +1,50 @@
 dynasty: tang
 cities:
+  - { name: 碎叶, modernName: 吉尔吉斯斯坦·托克马克, lon: 75.25, lat: 42.85, region: 安西都护府 }
   - { name: 长安, modernName: 西安, lon: 108.94, lat: 34.34, region: 京畿道 }
   - { name: 洛阳, modernName: 洛阳, lon: 112.45, lat: 34.62, region: 都畿道 }
+  - { name: 太原, modernName: 太原, lon: 112.55, lat: 37.87, region: 河东道 }
+  - { name: 蒲州, modernName: 山西永济, lon: 110.45, lat: 34.87, region: 河东道 }
+  - { name: 绵州, modernName: 四川江油, lon: 104.75, lat: 31.78, region: 剑南道 }
+  - { name: 成都, modernName: 成都, lon: 104.07, lat: 30.57, region: 剑南道 }
+  - { name: 梓州, modernName: 四川三台, lon: 105.09, lat: 31.09, region: 剑南道 }
+  - { name: 阆州, modernName: 四川阆中, lon: 106.01, lat: 31.56, region: 剑南道 }
+  - { name: 渝州, modernName: 重庆, lon: 106.55, lat: 29.56, region: 山南西道 }
+  - { name: 忠州, modernName: 重庆忠县, lon: 108.04, lat: 30.29, region: 山南西道 }
+  - { name: 夔州, modernName: 重庆奉节（白帝城）, lon: 109.46, lat: 31.02, region: 山南东道 }
+  - { name: 江陵, modernName: 湖北荆州, lon: 112.24, lat: 30.33, region: 山南东道 }
+  - { name: 襄阳, modernName: 襄阳, lon: 112.14, lat: 32.04, region: 山南东道 }
+  - { name: 郢州, modernName: 湖北钟祥, lon: 112.59, lat: 31.17, region: 山南东道 }
+  - { name: 江夏, modernName: 武汉, lon: 114.30, lat: 30.59, region: 山南东道 }
+  - { name: 安州, modernName: 湖北安陆, lon: 113.69, lat: 31.26, region: 淮南道 }
   - { name: 扬州, modernName: 扬州, lon: 119.41, lat: 32.39, region: 淮南道 }
+  - { name: 金陵, modernName: 南京, lon: 118.80, lat: 32.06, region: 江南东道 }
+  - { name: 当涂, modernName: 安徽马鞍山, lon: 118.51, lat: 31.55, region: 江南东道 }
+  - { name: 润州, modernName: 镇江, lon: 119.45, lat: 32.20, region: 江南东道 }
+  - { name: 苏州, modernName: 苏州, lon: 120.58, lat: 31.30, region: 江南东道 }
+  - { name: 钱塘, modernName: 杭州, lon: 120.16, lat: 30.29, region: 江南东道 }
+  - { name: 越州, modernName: 绍兴, lon: 120.58, lat: 30.00, region: 江南东道 }
+  - { name: 天姥山, modernName: 浙江新昌, lon: 120.85, lat: 29.35, region: 江南东道 }
+  - { name: 天台山, modernName: 浙江天台, lon: 121.00, lat: 29.10, region: 江南东道 }
+  - { name: 宣城, modernName: 安徽宣州, lon: 117.76, lat: 30.95, region: 江南西道 }
+  - { name: 秋浦, modernName: 安徽池州, lon: 117.49, lat: 30.66, region: 江南西道 }
+  - { name: 浔阳, modernName: 九江, lon: 116.00, lat: 29.71, region: 江南西道 }
+  - { name: 岳阳, modernName: 岳阳, lon: 113.13, lat: 29.37, region: 江南西道 }
+  - { name: 潭州, modernName: 长沙, lon: 112.94, lat: 28.23, region: 江南西道 }
+  - { name: 耒阳, modernName: 湖南耒阳, lon: 112.85, lat: 26.41, region: 江南西道 }
+  - { name: 夜郎, modernName: 贵州桐梓, lon: 106.83, lat: 28.13, region: 黔中道 }
+  - { name: 秦州, modernName: 甘肃天水, lon: 105.72, lat: 34.58, region: 陇右道 }
+  - { name: 同谷, modernName: 甘肃成县, lon: 105.72, lat: 33.74, region: 陇右道 }
+  - { name: 凉州, modernName: 甘肃武威, lon: 102.64, lat: 37.93, region: 陇右道 }
+  - { name: 宋州, modernName: 河南商丘, lon: 115.65, lat: 34.41, region: 河南道 }
+  - { name: 汴州, modernName: 开封, lon: 114.35, lat: 34.79, region: 河南道 }
+  - { name: 兖州, modernName: 山东济宁（任城）, lon: 116.59, lat: 35.41, region: 河南道 }
+  - { name: 济州, modernName: 山东茌平, lon: 116.25, lat: 36.58, region: 河南道 }
+  - { name: 泰山, modernName: 山东泰安, lon: 117.11, lat: 36.25, region: 河南道 }
+  - { name: 巩县, modernName: 河南巩义, lon: 112.98, lat: 34.76, region: 河南道 }
+  - { name: 新郑, modernName: 河南新郑, lon: 113.73, lat: 34.40, region: 河南道 }
+  - { name: 宿州, modernName: 安徽宿州（符离）, lon: 116.98, lat: 33.63, region: 河南道 }
+  - { name: 幽州, modernName: 北京, lon: 116.40, lat: 39.90, region: 河北道 }
+  - { name: 盩厔, modernName: 陕西周至, lon: 108.22, lat: 34.16, region: 京畿道 }
+  - { name: 下邽, modernName: 陕西渭南, lon: 109.51, lat: 34.52, region: 京畿道 }
+  - { name: 辋川, modernName: 陕西蓝田, lon: 109.32, lat: 34.15, region: 京畿道 }
