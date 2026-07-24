@@ -31,7 +31,7 @@
 - Consumes: 无
 - Produces: 路由 `/poets`（OverviewPage）、`/poets/:dynasty/:poetId`（PoetPage）；`pnpm dev`、`pnpm build`、`pnpm vitest run`、`pnpm build:data` 命令入口
 
-- [ ] **Step 1: 在非交互模式下脚手架并安装依赖**
+- [x] **Step 1: 在非交互模式下脚手架并安装依赖**
 
 ```bash
 cd ~/Desktop
@@ -46,7 +46,7 @@ pnpm add -D tailwindcss@^3 postcss autoprefixer vitest @testing-library/react @t
 
 （禁止执行 `pnpm dlx tailwindcss init -p`——dlx 会拉取最新 Tailwind v4，其中已移除 init 命令；配置文件在 Step 2 手写。）
 
-- [ ] **Step 2: 写入配置与入口文件**
+- [x] **Step 2: 写入配置与入口文件**
 
 `tailwind.config.ts`:
 
@@ -173,12 +173,12 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 "test": "vitest run"
 ```
 
-- [ ] **Step 3: 验证**
+- [x] **Step 3: 验证**
 
 Run: `pnpm dev` → 浏览器访问 `http://localhost:5173/poets`，看到占位总览页
 Run: `pnpm vitest run` → 通过（无测试时不报错退出，若报 "No test files found" 属预期，Task 2 起有测试）
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add -A
