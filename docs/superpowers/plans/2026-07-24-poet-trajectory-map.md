@@ -1594,7 +1594,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: 无
 - Produces: `PoetTheme` / `EasterEggConfig` 类型、`poetThemes: Record<string, PoetTheme>`、`applyPoetTheme(theme, poetId): void`、`CALLIGRAPHY_FONTS` 映射
 
-- [ ] **Step 1: 写主题测试**
+- [x] **Step 1: 写主题测试**
 
 `src/themes/themes.test.ts`:
 
@@ -1627,12 +1627,12 @@ describe('applyPoetTheme', () => {
 })
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `pnpm vitest run src/themes/themes.test.ts`
 Expected: FAIL，`Cannot find module './index'`
 
-- [ ] **Step 3: 实现主题系统**
+- [x] **Step 3: 实现主题系统**
 
 `src/themes/types.ts`:
 
@@ -1812,12 +1812,12 @@ export function applyPoetTheme(theme: PoetTheme, poetId: string): void {
 
 （PoetPage 的 `applyPoetTheme` 调用已在 Task 6 的最终代码中包含，此处无需改动。）
 
-- [ ] **Step 4: 测试通过 + 视觉验证**
+- [x] **Step 4: 测试通过 + 视觉验证**
 
 Run: `pnpm vitest run src/themes/themes.test.ts` → PASS
 视觉验证：切换 `index.html` 的 `data-poet` 或访问不同人物页（用 sample 数据），playwright-cli 截图确认色调差异与书法字体生效（`/tmp/pm/task8-theme.png`）
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A
