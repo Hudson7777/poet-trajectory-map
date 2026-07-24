@@ -6,6 +6,9 @@ import { PoetStateProvider } from './poet-state'
 import { HeroMap } from '../components/map/HeroMap'
 import { TimeSlider } from '../components/sections/TimeSlider'
 import { TimelineSection } from '../components/sections/TimelineSection'
+import { SummarySection } from '../components/sections/SummarySection'
+import { QuotesSection } from '../components/sections/QuotesSection'
+import { WorksSection } from '../components/sections/WorksSection'
 import { poetThemes, applyPoetTheme } from '../themes'
 
 export function PoetPage() {
@@ -34,6 +37,9 @@ export function PoetPage() {
         <HeroMap bundle={bundle} theme={theme} dynasty={dynastyInfo} />
         <TimeSlider min={bundle.poet.birth.year} max={bundle.poet.death.year} />
         <TimelineSection stops={bundle.poet.stops} />
+        <SummarySection poet={bundle.poet} />
+        <QuotesSection works={bundle.poet.works} />
+        <WorksSection works={bundle.poet.works} />
       </main>
     </PoetStateProvider>
   )
