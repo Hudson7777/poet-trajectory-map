@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f6f1e3;
+  --ink: #2e2a24;
+  --seal: #9e2b25;
+  --accent: #b8860b;
+  --accent-soft: #d4af37;
+  --font-calligraphy: "Ma Shan Zheng";
+}
+
+html { transition: background-color .6s ease, color .6s ease; }
+body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "SimSun", serif; }
