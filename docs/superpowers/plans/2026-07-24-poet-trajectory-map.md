@@ -1838,7 +1838,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: `EasterEggConfig`、`PoetTheme`
 - Produces: `<MotifIcon name>`、`renderEasterEggs(configs, scope)`（scope: 'map'|'quote'|'timeline'）
 
-- [ ] **Step 1: 写彩蛋注册表测试**
+- [x] **Step 1: 写彩蛋注册表测试**
 
 `src/themes/easter-eggs/registry.test.tsx`:
 
@@ -1868,12 +1868,12 @@ describe('easter egg registry', () => {
 })
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `pnpm vitest run src/themes/easter-eggs/registry.test.tsx`
 Expected: FAIL，`Cannot find module './registry'`
 
-- [ ] **Step 3: 实现彩蛋框架与彩蛋组件**
+- [x] **Step 3: 实现彩蛋框架与彩蛋组件**
 
 `src/themes/motifs/MotifIcon.tsx`（14 个意象图标统一入口，每个为简笔水墨 SVG；此处给出完整代码）:
 
@@ -2007,12 +2007,12 @@ export function LakeLevel({ position }: { position?: [number, number] }) {
 
 `HeroMap.tsx` 在 `<Trajectory>` 后插入 `{renderEasterEggs(theme.easterEggs, 'map', city => { const c = bundle.cities[city]; return c ? project(c.lon, c.lat) : undefined })}`；`QuotesSection.tsx` 与 `TimelineSection.tsx` 各新增 `poetId` prop（PoetPage 传入），容器内分别插入 `{renderEasterEggs(poetThemes[poetId].easterEggs, 'quote')}` 与 `{renderEasterEggs(poetThemes[poetId].easterEggs, 'timeline')}`。
 
-- [ ] **Step 4: 测试通过 + 视觉验证**
+- [x] **Step 4: 测试通过 + 视觉验证**
 
 Run: `pnpm vitest run src/themes/easter-eggs/registry.test.tsx` → PASS
 视觉验证：sample 数据（theme=libai）访问人物页，playwright-cli 截图确认水中捉月与金色轨迹（`/tmp/pm/task9-eggs.png`）
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A
