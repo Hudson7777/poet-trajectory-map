@@ -11,18 +11,23 @@ describe('createProjection', () => {
 })
 
 describe('buildTrajectoryPath', () => {
-  it('smooth 模式含二次贝塞尔', () => {
-    const d = buildTrajectoryPath([[0, 0], [10, 10], [20, 0]], true)
+  it('smooth 模式曲线精确穿过每个输入点', () => {
+    const pts: [number, number][] = [[0, 0], [10, 10], [20, 0], [30, 12]]
+    const d = buildTrajectoryPath(pts, true)
     expect(d).toMatch(/^M0,0/)
-    expect(d).toContain('Q10,10')
-    expect(d).toMatch(/L20,0$/)
+    // 每个中间点都必须作为某段 C 曲线的终点出现（不再漂移到 midpoint）
+    expect(d).toContain('10,10')
+    expect(d).toContain('20,0')
+    expect(d).toMatch(/30,12$/)
   })
   it('非 smooth 模式为折线', () => {
-    const d = buildTrajectoryPath([[0, 0], [10, 10], [20, 0]], false)
-    expect(d).toBe('M0,0L10,10L20,0')
+    expect(buildTrajectoryPath([[0, 0], [10, 10], [20, 0]], false)).toBe('M0,0L10,10L20,0')
   })
   it('空数组返回空串', () => {
     expect(buildTrajectoryPath([], true)).toBe('')
+  })
+  it('单点只输出 M', () => {
+    expect(buildTrajectoryPath([[5, 5]], true)).toBe('M5,5')
   })
 })
 

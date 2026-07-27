@@ -9,17 +9,23 @@ export function createProjection(lon0: number, lat0: number, s: number, sy: numb
 
 export function buildTrajectoryPath(points: [number, number][], smooth = true): string {
   if (points.length === 0) return ''
-  let d = `M${points[0][0]},${points[0][1]}`
+  const fmt = (n: number) => Math.round(n * 100) / 100
+  let d = `M${fmt(points[0][0])},${fmt(points[0][1])}`
   if (!smooth) {
-    return d + points.slice(1).map(([x, y]) => `L${x},${y}`).join('')
+    return d + points.slice(1).map(([x, y]) => `L${fmt(x)},${fmt(y)}`).join('')
   }
-  for (let i = 1; i < points.length - 1; i++) {
-    const [x, y] = points[i]
-    const [nx, ny] = points[i + 1]
-    d += ` Q${x},${y} ${(x + nx) / 2},${(y + ny) / 2}`
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i - 1] ?? points[i]
+    const p1 = points[i]
+    const p2 = points[i + 1]
+    const p3 = points[i + 2] ?? p2
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6
+    const c1y = p1[1] + (p2[1] - p0[1]) / 6
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6
+    const c2y = p2[1] - (p3[1] - p1[1]) / 6
+    d += `C${fmt(c1x)},${fmt(c1y)} ${fmt(c2x)},${fmt(c2y)} ${fmt(p2[0])},${fmt(p2[1])}`
   }
-  const last = points[points.length - 1]
-  return d + ` L${last[0]},${last[1]}`
+  return d
 }
 
 export function visibleStops<T extends { year: number }>(stops: T[], year: number): T[] {
