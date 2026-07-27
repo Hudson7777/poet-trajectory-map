@@ -32,7 +32,6 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .marker-tooltip-close:hover .marker-tooltip-close-x { opacity: 1; }
 .font-calligraphy { font-family: var(--font-calligraphy), "Kaiti SC", "STKaiti", "KaiTi", serif; }
 .section-title { font-size: 28px; letter-spacing: 8px; margin: 48px 0 24px; display: flex; align-items: center; gap: 12px; }
-.section-title .motif-mark { flex: none; }
 .quote-line { writing-mode: vertical-rl; font-size: 34px; letter-spacing: 6px; }
 .mounted-card { background: #f8f4e8; border: 1px solid #c9b992; box-shadow: 0 2px 12px rgba(80, 60, 30, .15); padding: 16px 20px; }
 .work-card header { cursor: pointer; display: flex; gap: 16px; align-items: baseline; }
