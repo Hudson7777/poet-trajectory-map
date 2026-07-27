@@ -36,7 +36,7 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
   const basemapRaw = basemapModules[`../../../data/geo/${dynasty.id}/basemap.svg`] ?? ''
   const visible = useMemo(() => visibleStops(bundle.poet.stops, year), [bundle.poet.stops, year])
   const groups = useMemo(() => groupStopsByCity(visible), [visible])
-  const [vbW, vbH] = dynasty.viewBox.split(' ').map(Number)
+  const [vbX, vbY, vbW, vbH] = dynasty.viewBox.split(' ').map(Number)
 
   useEffect(() => {
     const latest = visible[visible.length - 1]
@@ -58,8 +58,9 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
     ? groups.find(g => g.stops.includes(hoveredStop))?.stops ?? null
     : null
   // lockedStop 只在对应组仍存在于当前可见组时生效（年份回拨导致组消失时自动失效）
-  const lockedGroup = lockedStop && groups.some(g => g.city === lockedStop[0]?.city && g.stops.length === lockedStop.length)
-    ? lockedStop
+  // 仅按 city 比较：年份推进使同城组新增 stop 时锁定态保持稳定，tooltip 渲染当前组最新 stops
+  const lockedGroup = lockedStop && groups.some(g => g.city === lockedStop[0]?.city)
+    ? groups.find(g => g.city === lockedStop[0]?.city)?.stops ?? null
     : null
   const activeGroup = lockedGroup ?? hoveredGroup
 
@@ -68,8 +69,8 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
       <InkMap basemapRaw={basemapRaw} viewBox={dynasty.viewBox} controllerRef={controllerRef} onZoomChange={setZoomK}>
         {/* 空白点击区：点地图空白清除 lockedStop */}
         <rect
-          x={0}
-          y={0}
+          x={vbX}
+          y={vbY}
           width={vbW}
           height={vbH}
           fill="transparent"
