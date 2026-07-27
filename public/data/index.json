@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "id": "baijuyi",
+    "dynasty": "tang",
+    "name": "白居易",
+    "birthYear": 772,
+    "deathYear": 846,
+    "representativeLine": "野火烧不尽，春风吹又生",
+    "theme": "baijuyi"
+  },
+  {
+    "id": "dufu",
+    "dynasty": "tang",
+    "name": "杜甫",
+    "birthYear": 712,
+    "deathYear": 770,
+    "representativeLine": "会当凌绝顶，一览众山小",
+    "theme": "dufu"
+  },
+  {
+    "id": "libai",
+    "dynasty": "tang",
+    "name": "李白",
+    "birthYear": 701,
+    "deathYear": 762,
+    "representativeLine": "树深时见鹿，溪午不闻钟",
+    "theme": "libai"
+  },
+  {
+    "id": "menghaoran",
+    "dynasty": "tang",
+    "name": "孟浩然",
+    "birthYear": 689,
+    "deathYear": 740,
+    "representativeLine": "春眠不觉晓，处处闻啼鸟",
+    "theme": "menghaoran"
+  },
+  {
+    "id": "wangwei",
+    "dynasty": "tang",
+    "name": "王维",
+    "birthYear": 701,
+    "deathYear": 761,
+    "representativeLine": "独在异乡为异客，每逢佳节倍思亲",
+    "theme": "wangwei"
+  }
+]
