@@ -3,10 +3,12 @@ import type { Work } from '../../data/schemas'
 import { usePoetState } from '../../pages/poet-state'
 import { poetThemes } from '../../themes'
 import { MotifIcon } from '../../themes/motifs/MotifIcon'
+import { groupIntoVolumes } from './volumeGrouping'
 
 export function WorksSection({ works, poetId = 'libai' }: { works: Work[]; poetId?: string }) {
   const { openWork, setOpenWork } = usePoetState()
   const theme = poetThemes[poetId] ?? poetThemes.libai
+  const volumes = groupIntoVolumes(works)
 
   useEffect(() => {
     if (!openWork) return
@@ -16,22 +18,39 @@ export function WorksSection({ works, poetId = 'libai' }: { works: Work[]; poetI
   return (
     <section className="works-section">
       <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={20} />作品集</h2>
-      {works.map(w => (
-        <article key={`${w.title}-${w.year}`} id={`work-${w.title}`} className="work-card mounted-card">
-          <header onClick={() => setOpenWork(openWork === w.title ? null : w.title)}>
-            <span className="work-year font-calligraphy">{w.year}</span>
-            <h3>《{w.title}》</h3>
-            <span className="work-city">{w.city}</span>
-            <span className="work-genre">{w.genre}</span>
-          </header>
-          {openWork === w.title && (
-            <div className="work-detail">
-              <p className="work-text">{w.text}</p>
-              <p className="work-background">{w.background}</p>
-              <p className="work-source">出处：{w.source}</p>
-            </div>
-          )}
-        </article>
+      {volumes.map(vol => (
+        <div key={vol.title} className="volume">
+          <div className="volume-header">
+            <span className="volume-title font-calligraphy">{vol.title}</span>
+            <span className="volume-years font-calligraphy">{vol.startYear}—{vol.endYear}</span>
+          </div>
+          {vol.works.map(w => {
+            const open = openWork === w.title
+            return (
+              <article
+                key={`${w.title}-${w.year}`}
+                id={`work-${w.title}`}
+                className={`album-card mounted-card${open ? ' open' : ''}`}
+              >
+                <header onClick={() => setOpenWork(open ? null : w.title)}>
+                  <div className="album-meta">
+                    <span className="album-year font-calligraphy">{w.year}</span>
+                    <span className="album-city">{w.city}</span>
+                    <span className="album-genre">{w.genre}</span>
+                  </div>
+                  <h3 className="album-title font-calligraphy">《{w.title}》</h3>
+                </header>
+                {open && (
+                  <div className="album-detail">
+                    <p className="work-text">{w.text}</p>
+                    <p className="work-background">{w.background}</p>
+                    <p className="work-source">出处：{w.source}</p>
+                  </div>
+                )}
+              </article>
+            )
+          })}
+        </div>
       ))}
     </section>
   )

@@ -32,6 +32,22 @@ describe('QuotesSection', () => {
 })
 
 describe('WorksSection', () => {
+  it('按年份间隔分卷并显示卷首题签与竖排诗题', () => {
+    render(
+      <PoetStateProvider initialYear={762}>
+        <WorksSection works={works} />
+      </PoetStateProvider>,
+    )
+    // 726 与 752 相差 26 > 6 → 分两卷
+    expect(screen.getByText('卷一')).toBeTruthy()
+    expect(screen.getByText('卷二')).toBeTruthy()
+    // 卷首年份跨度
+    expect(screen.getByText('726—726')).toBeTruthy()
+    expect(screen.getByText('752—752')).toBeTruthy()
+    // 竖排诗题（album-title）存在
+    expect(screen.getByText('《静夜思》')).toBeTruthy()
+  })
+
   it('点击作品卡展开全文与背景', () => {
     render(
       <PoetStateProvider initialYear={762}>

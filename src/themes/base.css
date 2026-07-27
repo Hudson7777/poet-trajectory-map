@@ -34,8 +34,60 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .section-title { font-size: 28px; letter-spacing: 8px; margin: 48px 0 24px; display: flex; align-items: center; gap: 12px; }
 .quote-line { writing-mode: vertical-rl; font-size: 34px; letter-spacing: 6px; }
 .mounted-card { background: #f8f4e8; border: 1px solid #c9b992; box-shadow: 0 2px 12px rgba(80, 60, 30, .15); padding: 16px 20px; }
-.work-card header { cursor: pointer; display: flex; gap: 16px; align-items: baseline; }
-.work-text { white-space: pre-line; line-height: 2; }
+.work-text { white-space: pre-line; line-height: 2.2; }
+
+/* ===== 作品集册页 ===== */
+.volume { margin-bottom: 40px; }
+.volume-header {
+  display: flex; align-items: baseline; gap: 16px;
+  margin: 24px 0 16px;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, rgba(201,185,146,.18), rgba(229,220,195,.4), rgba(201,185,146,.18));
+  border-top: 1px solid #c9b992;
+  border-bottom: 1px solid #c9b992;
+  box-shadow: inset 0 1px 0 #e5dcc3, inset 0 -1px 0 #e5dcc3;
+}
+.volume-title { font-size: 26px; letter-spacing: 6px; color: var(--ink); }
+.volume-years { font-size: 16px; color: var(--accent); opacity: .85; letter-spacing: 2px; }
+.album-card {
+  position: relative;
+  background: #f8f4e8;
+  border: 1px solid #c9b992;
+  outline: 3px solid #e5dcc3;
+  outline-offset: -4px;
+  box-shadow: 0 2px 10px rgba(80, 60, 30, .12);
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease, outline-color .25s ease;
+}
+.album-card:hover {
+  transform: translateY(-2px);
+  border-color: #a8946a;
+  outline-color: #d4af37;
+  box-shadow: 0 6px 18px rgba(80, 60, 30, .22);
+}
+.album-card.open { border-color: var(--seal); outline-color: var(--accent-soft); }
+.album-card header { cursor: pointer; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.album-meta { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+.album-year { font-size: 22px; color: var(--seal); line-height: 1.1; }
+.album-city { font-size: 13px; opacity: .7; }
+.album-genre { font-size: 12px; opacity: .55; }
+.album-title {
+  writing-mode: vertical-rl;
+  font-size: 20px;
+  letter-spacing: 4px;
+  line-height: 1.2;
+  color: var(--ink);
+  text-align: start;
+}
+.album-detail {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #c9b992;
+}
+.album-detail .work-text { font-family: "Songti SC", "SimSun", serif; line-height: 2.2; font-size: 17px; }
+.work-background { margin-top: 12px; font-size: 14px; opacity: .7; line-height: 1.8; }
+.work-source { margin-top: 8px; font-size: 12px; opacity: .5; }
 
 /* ===== 彩蛋系统 ===== */
 .lake-level { animation: lake-breathe 4s ease-in-out infinite; }
@@ -120,9 +172,23 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .time-slider-wrap { display: flex; align-items: center; gap: 16px; padding: 8px 40px; }
 .time-slider { flex: 1; accent-color: var(--accent); }
 .time-slider-year { font-size: 28px; min-width: 90px; }
-.timeline-section ol { list-style: none; padding: 0 40px; }
-.timeline-section li { display: flex; gap: 16px; padding: 10px 12px; border-left: 3px solid transparent; cursor: pointer; }
+.timeline-section ol { list-style: none; padding: 8px 40px 8px 56px; position: relative; }
+.timeline-section ol::before {
+  content: ''; position: absolute; left: 44px; top: 12px; bottom: 12px;
+  width: 2px; background: var(--accent); opacity: .35;
+}
+.timeline-section li {
+  display: flex; gap: 16px; padding: 10px 12px; cursor: pointer; position: relative;
+  border-left: 3px solid transparent;
+}
+.timeline-section li::before {
+  content: ''; position: absolute; left: -16px; top: 50%;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--seal); transform: translateY(-50%);
+  box-shadow: 0 0 0 2px var(--paper);
+}
 .timeline-section li.active, .timeline-section li:hover { border-left-color: var(--accent); background: rgba(0,0,0,.04); }
+.timeline-section li.active::before, .timeline-section li:hover::before { box-shadow: 0 0 0 2px var(--paper), 0 0 6px var(--seal); }
 .tl-year { min-width: 64px; font-size: 22px; color: var(--seal); }
 .tl-role { margin-left: auto; opacity: .6; font-size: 14px; }
 .tl-uncertain { color: var(--seal); font-size: 12px; border: 1px dashed var(--seal); padding: 0 4px; border-radius: 3px; }

@@ -32,7 +32,7 @@ export function OverviewPage() {
             <Link key={p.id} to={`/poets/${p.dynasty}/${p.id}`} className="poet-card mounted-card">
               <MotifIcon name={poetThemes[p.theme]?.motifs[0] ?? 'moon'} size={48} />
               <span className="poet-name font-calligraphy">{p.name}</span>
-              <span className="poet-years">{p.birthYear} — {p.deathYear}</span>
+              <span className="poet-years font-calligraphy">{p.birthYear} — {p.deathYear}</span>
               <span className="poet-quote">{p.representativeLine}</span>
             </Link>
           ))}
