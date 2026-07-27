@@ -3,6 +3,9 @@ import { render, fireEvent } from '@testing-library/react'
 import { Trajectory } from './Trajectory'
 import { CityMarker } from './CityMarker'
 import type { Stop } from '../../data/schemas'
+import type { BrushStyle } from '../../themes/types'
+
+const goldBrush: BrushStyle = { kind: 'gold', colors: ['#b8860b', '#d4af37'], width: 2.5 }
 
 const cities = {
   扬州: { name: '扬州', modernName: '扬州', lon: 119.41, lat: 32.39, region: '淮南道' },
@@ -17,15 +20,16 @@ const stops: Stop[] = [
 describe('Trajectory', () => {
   it('按年份过滤后少于 2 点不渲染', () => {
     const { container } = render(
-      <svg><Trajectory stops={stops} cities={cities} project={project} year={700} /></svg>,
+      <svg><Trajectory stops={stops} cities={cities} project={project} year={700} brush={goldBrush} /></svg>,
     )
     expect(container.querySelector('path')).toBeNull()
   })
-  it('正常年份渲染轨迹 path', () => {
+  it('正常年份渲染轨迹双层 path（底层晕染 + 上层主线条），主线条带 brush kind class', () => {
     const { container } = render(
-      <svg><Trajectory stops={stops} cities={cities} project={project} year={762} /></svg>,
+      <svg><Trajectory stops={stops} cities={cities} project={project} year={762} brush={goldBrush} /></svg>,
     )
-    expect(container.querySelector('path.trajectory-ink')).not.toBeNull()
+    expect(container.querySelector('path.trajectory-gold')).not.toBeNull()
+    expect(container.querySelectorAll('path.trajectory').length).toBeGreaterThanOrEqual(2)
   })
 })
 

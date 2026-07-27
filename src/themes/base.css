@@ -14,9 +14,7 @@
 html { transition: background-color .6s ease, color .6s ease; }
 body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "SimSun", serif; }
 
-.trajectory-ink { stroke: #2e2a24; stroke-width: 3; stroke-dasharray: 14 7 3 7; stroke-linecap: round; opacity: .85; }
-.trajectory-gold { stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; opacity: .9; }
-.trajectory-beacon { stroke: #6b6b66; stroke-width: 3; stroke-dasharray: 10 6; opacity: .8; }
+.trajectory { stroke-linecap: round; }
 .city-label { font-size: 14px; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
 .uncertain-seal text { font-size: 9px; fill: var(--seal); font-family: var(--font-calligraphy), "Kaiti SC", serif; }
 .city-marker, .work-marker { cursor: pointer; transition: opacity .3s; }

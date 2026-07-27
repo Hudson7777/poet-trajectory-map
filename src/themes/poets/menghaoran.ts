@@ -9,6 +9,9 @@ export const menghaoranTheme: PoetTheme = {
   seal: '#a0503c',
   motifs: ['peach', 'spring-rain', 'boat'],
   calligraphy: 'zhimang',
+  brush: { kind: 'plain', colors: ['#8a7a5c', '#a39a80'], width: 2 },
+  divider: '春眠不觉晓',
+  inscription: { line: '春眠不觉晓', sub: '孟浩然 689—740' },
   easterEggs: [
     { id: 'falling-petals', type: 'quote-hover' },
     { id: 'lake-level', type: 'map-node', target: '岳阳' },

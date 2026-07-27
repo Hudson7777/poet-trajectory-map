@@ -9,8 +9,10 @@ export const dufuTheme: PoetTheme = {
   seal: '#8f2d23',
   motifs: ['beacon', 'hut', 'boat'],
   calligraphy: 'longcang',
+  brush: { kind: 'dry', colors: ['#5a4632', '#8a5a3b'], width: 3 },
+  divider: '无边落木萧萧下',
+  inscription: { line: '无边落木萧萧下', sub: '杜甫 712—770' },
   easterEggs: [
-    { id: 'beacon-trajectory', type: 'trajectory-style', style: 'beacon', trigger: { yearGte: 755 } },
     { id: 'straw-hut-hover', type: 'map-node', target: '成都' },
     { id: 'snow-mountain', type: 'decoration' },
   ],

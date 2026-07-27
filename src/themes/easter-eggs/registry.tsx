@@ -35,7 +35,6 @@ const SCOPE_MAP: Partial<Record<EasterEggConfig['type'], string>> = {
   decoration: 'map',
   'quote-hover': 'quote',
   timeline: 'timeline',
-  // 'trajectory-style' 不在此渲染，由 HeroMap 通用处理
 }
 
 export function renderEasterEggs(

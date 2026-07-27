@@ -1,8 +1,15 @@
+export type BrushKind = 'gold' | 'dry' | 'fade' | 'plain' | 'spring'
+
+export interface BrushStyle {
+  kind: BrushKind
+  colors: [string, string]
+  width: number
+}
+
 export interface EasterEggConfig {
   id: string
-  type: 'map-node' | 'quote-hover' | 'timeline' | 'decoration' | 'trajectory-style'
+  type: 'map-node' | 'quote-hover' | 'timeline' | 'decoration'
   target?: string
-  style?: 'ink' | 'gold' | 'beacon'
   trigger?: { yearGte: number }
 }
 
@@ -14,6 +21,9 @@ export interface PoetTheme {
   seal: string
   motifs: string[]
   calligraphy: 'liujian' | 'longcang' | 'mashan' | 'zhimang'
+  brush: BrushStyle
+  divider: string
+  inscription: { line: string; sub: string }
   easterEggs: EasterEggConfig[]
 }
 

@@ -9,9 +9,11 @@ export const libaiTheme: PoetTheme = {
   seal: '#9e2b25',
   motifs: ['moon', 'wine', 'lotus', 'sword'],
   calligraphy: 'liujian',
+  brush: { kind: 'gold', colors: ['#b8860b', '#d4af37'], width: 2.5 },
+  divider: '天生我材必有用',
+  inscription: { line: '天生我材必有用', sub: '李白 701—762' },
   easterEggs: [
     { id: 'catch-moon', type: 'map-node', target: '当涂' },
-    { id: 'gold-trajectory', type: 'trajectory-style', style: 'gold' },
     { id: 'westward-suiye', type: 'decoration' },
     { id: 'hanlin-seal', type: 'timeline', target: '742' },
   ],

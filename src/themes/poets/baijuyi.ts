@@ -9,6 +9,9 @@ export const baijuyiTheme: PoetTheme = {
   seal: '#9e2b25',
   motifs: ['apricot', 'lute', 'incense-peak'],
   calligraphy: 'zhimang',
+  brush: { kind: 'spring', colors: ['#7a9b62', '#c07a86'], width: 2.5 },
+  divider: '乱花渐欲迷人眼',
+  inscription: { line: '乱花渐欲迷人眼', sub: '白居易 772—846' },
   easterEggs: [
     { id: 'lute-notes', type: 'map-node', target: '浔阳' },
     { id: 'grass-sway', type: 'quote-hover' },

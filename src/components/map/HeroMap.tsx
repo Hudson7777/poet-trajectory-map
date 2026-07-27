@@ -4,6 +4,7 @@ import type { DynastyInfo, PoetTheme } from '../../themes/types'
 import { usePoetState } from '../../pages/poet-state'
 import { InkMap, type InkMapController } from './InkMap'
 import { Trajectory } from './Trajectory'
+import { BrushDefs } from './brushDefs'
 import { CityMarker, type LabelSide } from './CityMarker'
 import { MarkerTooltip } from './MarkerTooltip'
 import { WorkMarker } from './WorkMarker'
@@ -47,11 +48,8 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
 
-  // 轨迹样式：通用读取 trajectory-style 彩蛋配置，不认识具体彩蛋 id
-  const styleEgg = theme.easterEggs.find(e => e.type === 'trajectory-style')
-  const trajectoryStyle = styleEgg?.trigger?.yearGte !== undefined
-    ? (year >= styleEgg.trigger.yearGte ? styleEgg.style ?? 'ink' : 'ink')
-    : styleEgg?.style ?? 'ink'
+  // 焦墨笔触（杜甫）在安史之乱（755）后转为重笔：intense 加粗加深
+  const intense = theme.brush.kind === 'dry' && year >= 755
 
   // locked 优先于 hover：决定哪个组展示 tooltip
   const hoveredGroup = hoveredStop
@@ -67,6 +65,7 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
   return (
     <section className="hero-map">
       <InkMap basemapRaw={basemapRaw} viewBox={dynasty.viewBox} controllerRef={controllerRef} onZoomChange={setZoomK}>
+        <BrushDefs brush={theme.brush} />
         {/* 空白点击区：点地图空白清除 lockedStop */}
         <rect
           x={vbX}
@@ -77,7 +76,7 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
           pointerEvents="all"
           onClick={() => setLockedStop(null)}
         />
-        <Trajectory stops={bundle.poet.stops} cities={bundle.cities} project={project} year={year} style={trajectoryStyle} />
+        <Trajectory stops={bundle.poet.stops} cities={bundle.cities} project={project} year={year} brush={theme.brush} intense={intense} />
         {renderEasterEggs(theme.easterEggs, 'map', city => {
           const c = bundle.cities[city]
           return c ? project(c.lon, c.lat) : undefined

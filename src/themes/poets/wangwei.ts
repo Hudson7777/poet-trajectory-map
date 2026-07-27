@@ -9,6 +9,9 @@ export const wangweiTheme: PoetTheme = {
   seal: '#9e2b25',
   motifs: ['bamboo', 'mountain', 'qin'],
   calligraphy: 'mashan',
+  brush: { kind: 'fade', colors: ['#5f7a6e', '#7a9b8a'], width: 2 },
+  divider: '行到水穷处，坐看云起时',
+  inscription: { line: '行到水穷处，坐看云起时', sub: '王维 701—761' },
   easterEggs: [
     { id: 'bamboo-sway', type: 'map-node', target: '辋川' },
     { id: 'zen-whitespace', type: 'decoration' },

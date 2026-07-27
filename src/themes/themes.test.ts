@@ -2,14 +2,22 @@ import { describe, it, expect } from 'vitest'
 import { poetThemes, applyPoetTheme } from './index'
 import type { PoetTheme } from './types'
 
-const REQUIRED_TOKENS: (keyof PoetTheme)[] = ['accent', 'accentSoft', 'inkTone', 'paperTone', 'seal', 'motifs', 'calligraphy']
+const REQUIRED_TOKENS: (keyof PoetTheme)[] = ['accent', 'accentSoft', 'inkTone', 'paperTone', 'seal', 'motifs', 'calligraphy', 'brush', 'divider', 'inscription']
+
+const BRUSH_KINDS = ['gold', 'dry', 'fade', 'plain', 'spring']
 
 describe('poetThemes', () => {
-  it.each(Object.keys(poetThemes))('%s 主题七类 token 齐全', id => {
+  it.each(Object.keys(poetThemes))('%s 主题十类 token 齐全', id => {
     const theme = poetThemes[id]
     for (const key of REQUIRED_TOKENS) expect(theme[key], key).toBeTruthy()
     expect(theme.motifs.length).toBeGreaterThan(0)
     expect(theme.easterEggs.length).toBeGreaterThanOrEqual(2)
+  })
+  it.each(Object.keys(poetThemes))('%s brush kind 合法且 colors 为两色', id => {
+    const { brush } = poetThemes[id]
+    expect(BRUSH_KINDS).toContain(brush.kind)
+    expect(brush.colors).toHaveLength(2)
+    expect(brush.width).toBeGreaterThan(0)
   })
   it('自动发现五人主题', () => {
     expect(Object.keys(poetThemes).sort()).toEqual(['baijuyi', 'dufu', 'libai', 'menghaoran', 'wangwei'])
