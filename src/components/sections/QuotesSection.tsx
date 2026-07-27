@@ -1,5 +1,6 @@
 import type { Work } from '../../data/schemas'
 import { poetThemes } from '../../themes'
+import { MotifIcon } from '../../themes/motifs/MotifIcon'
 import { renderEasterEggs } from '../../themes/easter-eggs/registry'
 
 export function QuotesSection({ works, poetId }: { works: Work[]; poetId: string }) {
@@ -7,7 +8,7 @@ export function QuotesSection({ works, poetId }: { works: Work[]; poetId: string
   const quotes = works.flatMap(w => w.famous.map(line => ({ line, title: w.title }))).slice(0, 5)
   return (
     <section className="quotes-section">
-      <h2 className="section-title">精华名句</h2>
+      <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={20} />精华名句</h2>
       <div className="quotes">
         {quotes.map(q => (
           <blockquote key={q.line} className="quote">

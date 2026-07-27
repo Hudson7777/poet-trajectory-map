@@ -31,7 +31,8 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .marker-tooltip-close-x { font-size: 16px; fill: var(--ink); opacity: .55; }
 .marker-tooltip-close:hover .marker-tooltip-close-x { opacity: 1; }
 .font-calligraphy { font-family: var(--font-calligraphy), "Kaiti SC", "STKaiti", "KaiTi", serif; }
-.section-title { font-size: 28px; letter-spacing: 8px; margin: 48px 0 24px; }
+.section-title { font-size: 28px; letter-spacing: 8px; margin: 48px 0 24px; display: flex; align-items: center; gap: 12px; }
+.section-title .motif-mark { flex: none; }
 .quote-line { writing-mode: vertical-rl; font-size: 34px; letter-spacing: 6px; }
 .mounted-card { background: #f8f4e8; border: 1px solid #c9b992; box-shadow: 0 2px 12px rgba(80, 60, 30, .15); padding: 16px 20px; }
 .work-card header { cursor: pointer; display: flex; gap: 16px; align-items: baseline; }
@@ -74,6 +75,34 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 
 .quotes-section { position: relative; }
 .timeline-section { position: relative; }
+
+/* ===== 山水横卷分隔带 ===== */
+.section-divider { width: 100%; max-width: 1200px; margin: 8px auto 0; opacity: .5; pointer-events: none; }
+.section-divider svg { width: 100%; height: 72px; display: block; }
+
+/* ===== 地图叠加层（题字/印章/图例/缩放提示） ===== */
+.hero-map { position: relative; }
+.map-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.map-inscription { position: absolute; top: 20px; left: 24px; display: flex; gap: 12px; align-items: flex-start; }
+.map-inscription-line { writing-mode: vertical-rl; font-size: 28px; letter-spacing: 6px; color: var(--ink); opacity: .82; line-height: 1.1; }
+.map-inscription-sub { writing-mode: vertical-rl; font-size: 13px; letter-spacing: 2px; color: var(--ink); opacity: .55; margin-top: 4px; }
+.map-seal-wrap { position: absolute; bottom: 20px; right: 24px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.map-name-seal { width: 36px; height: 36px; background: var(--seal); color: #fff; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; place-items: center; font-size: 14px; line-height: 1; border-radius: 2px; box-shadow: 0 1px 3px rgba(80,60,30,.3); }
+.map-name-seal span { display: block; transform: scaleY(1.05); }
+.map-dynasty-seal { width: 22px; height: 22px; border: 1px solid var(--seal); color: var(--seal); display: grid; place-items: center; font-size: 12px; border-radius: 2px; opacity: .85; }
+.map-legend { position: absolute; bottom: 20px; left: 24px; list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--ink); opacity: .6; }
+.map-legend li { display: flex; align-items: center; gap: 6px; }
+.legend-dot { display: inline-block; width: 10px; height: 10px; }
+.legend-solid { background: var(--seal); border-radius: 50%; }
+.legend-scroll { width: 12px; height: 8px; background: transparent; border: 1.5px solid var(--accent); border-radius: 2px; }
+.legend-hollow { background: transparent; border: 1.5px solid var(--ink); border-radius: 50%; }
+.map-zoom-hint { position: absolute; top: 20px; right: 24px; font-size: 12px; color: var(--ink); opacity: .45; }
+@media (max-width: 768px) {
+  .map-inscription-line { font-size: 22px; letter-spacing: 4px; }
+  .map-inscription-sub { font-size: 11px; }
+  .map-legend { display: none; }
+  .map-zoom-hint { display: none; }
+}
 
 /* ===== 总览页 / 纸纹 / 托裱卡片 / 移动端 ===== */
 .paper-texture-svg { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }

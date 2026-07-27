@@ -26,6 +26,33 @@ interface HeroMapProps {
   dynasty: DynastyInfo
 }
 
+/** 地图叠加层：题字、姓名朱印、图例、缩放提示。pointer-events: none，不阻塞地图交互 */
+function MapOverlay({ theme, poetName }: { theme: PoetTheme; poetName: string }) {
+  // 姓名朱印取末两字（如「李白」「杜甫」），白文两行
+  const sealChars = poetName.length >= 2 ? poetName.slice(-2) : poetName
+  return (
+    <div className="map-overlay" aria-hidden="true">
+      <div className="map-inscription">
+        <span className="map-inscription-line font-calligraphy">{theme.inscription.line}</span>
+        <span className="map-inscription-sub">{theme.inscription.sub}</span>
+      </div>
+      <div className="map-seal-wrap">
+        <div className="map-name-seal">
+          <span className="font-calligraphy">{sealChars[0]}</span>
+          <span className="font-calligraphy">{sealChars[1]}</span>
+        </div>
+        <div className="map-dynasty-seal font-calligraphy">唐</div>
+      </div>
+      <ul className="map-legend">
+        <li><span className="legend-dot legend-solid" />生平</li>
+        <li><span className="legend-dot legend-scroll" />作品</li>
+        <li><span className="legend-dot legend-hollow" />存疑</li>
+      </ul>
+      <div className="map-zoom-hint">按住 ⌘ 滚动缩放</div>
+    </div>
+  )
+}
+
 export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
   const { year, hoveredStop, setHoveredStop, lockedStop, setLockedStop, setOpenWork } = usePoetState()
   const controllerRef = useRef<InkMapController | null>(null)
@@ -126,6 +153,7 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
           )
         })}
       </InkMap>
+      <MapOverlay theme={theme} poetName={bundle.poet.name} />
     </section>
   )
 }

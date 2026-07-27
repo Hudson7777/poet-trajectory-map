@@ -1,6 +1,9 @@
 import type { Poet } from '../../data/schemas'
+import { poetThemes } from '../../themes'
+import { MotifIcon } from '../../themes/motifs/MotifIcon'
 
-export function SummarySection({ poet }: { poet: Poet }) {
+export function SummarySection({ poet, poetId = 'libai' }: { poet: Poet; poetId?: string }) {
+  const theme = poetThemes[poetId] ?? poetThemes.libai
   const { review, stats } = poet.summary
   const items = [
     { label: '行迹城市', value: stats.cities },
@@ -10,7 +13,7 @@ export function SummarySection({ poet }: { poet: Poet }) {
   ]
   return (
     <section className="summary-section">
-      <h2 className="section-title">其人</h2>
+      <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={20} />其人</h2>
       <p className="review">{review}</p>
       <div className="stats">
         {items.map(i => (

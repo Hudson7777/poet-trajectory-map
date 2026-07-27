@@ -1,6 +1,7 @@
 import type { Stop } from '../../data/schemas'
 import { usePoetState } from '../../pages/poet-state'
 import { poetThemes } from '../../themes'
+import { MotifIcon } from '../../themes/motifs/MotifIcon'
 import { renderEasterEggs } from '../../themes/easter-eggs/registry'
 
 export function TimelineSection({ stops, poetId }: { stops: Stop[]; poetId: string }) {
@@ -8,7 +9,7 @@ export function TimelineSection({ stops, poetId }: { stops: Stop[]; poetId: stri
   const theme = poetThemes[poetId] ?? poetThemes.libai
   return (
     <section className="timeline-section">
-      <h2 className="section-title">生平年表</h2>
+      <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={20} />生平年表</h2>
       <ol>
         {stops.map(s => (
           <li

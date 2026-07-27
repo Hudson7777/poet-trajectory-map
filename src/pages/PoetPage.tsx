@@ -9,6 +9,7 @@ import { TimelineSection } from '../components/sections/TimelineSection'
 import { SummarySection } from '../components/sections/SummarySection'
 import { QuotesSection } from '../components/sections/QuotesSection'
 import { WorksSection } from '../components/sections/WorksSection'
+import { SectionDivider } from '../components/sections/SectionDivider'
 import { poetThemes, applyPoetTheme } from '../themes'
 
 export function PoetPage() {
@@ -38,9 +39,12 @@ export function PoetPage() {
         <HeroMap bundle={bundle} theme={theme} dynasty={dynastyInfo} />
         <TimeSlider min={bundle.poet.birth.year} max={bundle.poet.death.year} />
         <TimelineSection stops={bundle.poet.stops} poetId={poetId!} />
-        <SummarySection poet={bundle.poet} />
+        <SectionDivider svg={theme.divider} />
+        <SummarySection poet={bundle.poet} poetId={poetId!} />
+        <SectionDivider svg={theme.divider} />
         <QuotesSection works={bundle.poet.works} poetId={poetId!} />
-        <WorksSection works={bundle.poet.works} />
+        <SectionDivider svg={theme.divider} />
+        <WorksSection works={bundle.poet.works} poetId={poetId!} />
       </main>
     </PoetStateProvider>
   )
