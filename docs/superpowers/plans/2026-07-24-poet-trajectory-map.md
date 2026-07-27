@@ -2337,11 +2337,11 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Modify: 走查中发现的样式问题文件
 - Create: `docs/screenshots/`（验收截图存档）
 
-- [ ] **Step 1: 全量构建**
+- [x] **Step 1: 全量构建**
 
 Run: `pnpm build:data && pnpm build` → 全部通过，`dist/` 产物生成，`public/data/` 含 index.json + 五人 JSON。
 
-- [ ] **Step 2: 五人物页逐一 playwright 截图走查**
+- [x] **Step 2: 五人物页逐一 playwright 截图走查**
 
 对每人执行（以 libai 为例，其余四人替换 poetId）:
 
@@ -2355,11 +2355,11 @@ playwright-cli -s=walkthrough close
 
 走查清单（每页逐项核对）:①水墨底图完整无破版 ②轨迹线按时序正确连接 ③存疑节点为空心印点 ④时间轴拖动轨迹渐进 ⑤年表 hover 地图联动 ⑥主题色与书法字体契合人物 ⑦彩蛋触发正常 ⑧四大板块数据完整 ⑨移动端视口（--viewport-size=390,844）布局不破。
 
-- [ ] **Step 3: 修复走查发现的问题并复验**
+- [x] **Step 3: 修复走查发现的问题并复验**
 
 每修复一项复跑一次对应截图，直至清单全过。
 
-- [ ] **Step 4: Commit + 打 tag**
+- [x] **Step 4: Commit + 打 tag**
 
 ```bash
 git add -A
