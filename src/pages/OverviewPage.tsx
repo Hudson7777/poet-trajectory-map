@@ -6,12 +6,13 @@ import { poetThemes } from '../themes'
 import { PaperTexture } from '../components/PaperTexture'
 
 export function OverviewPage() {
-  const [index, setIndex] = useState<PoetIndexEntry[] | null>(null)
+  const [index, setIndex] = useState<PoetIndexEntry[]>([])
+  const [error, setError] = useState(false)
   useEffect(() => {
     fetch('/data/index.json')
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
       .then(setIndex)
-      .catch(() => setIndex(null))
+      .catch(() => setError(true))
   }, [])
   return (
     <main className="overview">
@@ -23,7 +24,7 @@ export function OverviewPage() {
           <span key={d} className="dynasty disabled" title="敬请期待">{d}</span>
         ))}
       </nav>
-      {index === null ? (
+      {error ? (
         <p className="load-error">索引加载失败，请刷新重试。</p>
       ) : (
         <div className="poet-wall">
