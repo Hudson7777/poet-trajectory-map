@@ -2202,23 +2202,23 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - Consumes: 同 Task 11
 - Produces: 通过 `pnpm build:data` 的完整杜甫数据 + 校对表
 
-- [ ] **Step 1: 骨架轮**
+- [x] **Step 1: 骨架轮**
 
 资料源：《旧唐书·杜甫传》《新唐书·杜甫传》、仇兆鳌《杜诗详注》。已知锚点（须逐条核对）：712 生巩县；731-741 漫游吴越（金陵、越州）与齐赵（泰山、兖州）;746 长安应试不第（李林甫「野无遗贤」）;751 献三大礼赋；755 授河西尉不赴、改右卫率府胄曹参军；755 安史乱起；756 长安陷贼；757 奔凤翔授左拾遗；758 贬华州司功参军；759 弃官，秦州→同谷→成都；760 营草堂于成都；762-764 避乱梓州/阆州；765 严武荐检校工部员外郎；766-768 居夔州；768 出峡，江陵→岳阳；769 潭州；770 卒于潭岳间舟中（耒阳，卒地有说可标 uncertain）。
 
-- [ ] **Step 2: 作品轮**
+- [x] **Step 2: 作品轮**
 
 候选：《望岳》（泰山）、《兵车行》（长安）、《丽人行》（长安）、《自京赴奉先县咏怀五百字》（长安/奉先）、《春望》（长安）、《石壕吏》（华州途中）、《茅屋为秋风所破歌》（成都）、《蜀相》（成都）、《春夜喜雨》（成都）、《闻官军收河南河北》（梓州）、《登高》（夔州）、《秋兴八首》（夔州）、《登岳阳楼》（岳阳）、《旅夜书怀》（出峡舟中）、《江南逢李龟年》（潭州）。
 
-- [ ] **Step 3: 校验轮**
+- [x] **Step 3: 校验轮**
 
 写 `data/poets/tang/dufu.yaml` + 时间线自洽 + `pnpm build:data` 通过。
 
-- [ ] **Step 4: 写校对表 `docs/proofread/dufu.md`**
+- [x] **Step 4: 写校对表 `docs/proofread/dufu.md`**
 
-- [ ] **Step 5: 用户抽查 gate（同 Task 11 流程）**
+- [x] **Step 5: 用户抽查 gate（同 Task 11 流程）**
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add data/poets/tang/dufu.yaml docs/proofread/dufu.md
@@ -2236,23 +2236,23 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 **Interfaces:** 同 Task 11
 
-- [ ] **Step 1: 骨架轮**
+- [x] **Step 1: 骨架轮**
 
 资料源：《旧唐书·王维传》《新唐书·王维传》、赵殿成《王右丞集笺注》、陈铁民《王维年谱》。已知锚点（须逐条核对）：701 生蒲州；721 进士及第、调太乐丞；722 贬济州司仓参军；728 归长安；735 张九龄荐右拾遗；737 监察御史、出使凉州；740 归朝、殿中侍御史；744-745 居辋川（得宋之问别业）;750 丁母忧；752 起复吏部郎中；755 安禄山陷长安、迫受伪职；757 两京收复、授太子中允；758-761 尚书右丞；761 卒于辋川。
 
-- [ ] **Step 2: 作品轮**
+- [x] **Step 2: 作品轮**
 
 候选：《九月九日忆山东兄弟》（长安，年少作）、《送元二使安西》（长安/渭城）、《使至塞上》（凉州）、《山居秋暝》（辋川）、《鹿柴》（辋川）、《竹里馆》（辋川）、《辛夷坞》（辋川）、《终南山》（终南山）、《酬张少府》（辋川）、《积雨辋川庄作》（辋川）、《相思》（江南）、《送沈子福归江东》（长江）。
 
-- [ ] **Step 3: 校验轮**
+- [x] **Step 3: 校验轮**
 
 写 `data/poets/tang/wangwei.yaml` + 时间线自洽 + `pnpm build:data` 通过。
 
-- [ ] **Step 4: 写校对表 `docs/proofread/wangwei.md`**
+- [x] **Step 4: 写校对表 `docs/proofread/wangwei.md`**
 
-- [ ] **Step 5: 用户抽查 gate（同 Task 11 流程）**
+- [x] **Step 5: 用户抽查 gate（同 Task 11 流程）**
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add data/poets/tang/wangwei.yaml docs/proofread/wangwei.md
@@ -2270,23 +2270,23 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 **Interfaces:** 同 Task 11
 
-- [ ] **Step 1: 骨架轮**
+- [x] **Step 1: 骨架轮**
 
 资料源：《旧唐书·文苑传》《新唐书·孟浩然传》、佟培基《孟浩然年谱》研究。已知锚点（须逐条核对）：689 生襄阳；712-716 隐居鹿门山（襄阳）;727 入京应试不第；728-729 洛阳/长安干谒（「不才明主弃」忤旨放还）;730-733 漫游吴越（钱塘、越州、天台山）;737 韩朝宗约荐不赴；740 王昌龄过襄阳、食鲜疾发卒于襄阳。
 
-- [ ] **Step 2: 作品轮**
+- [x] **Step 2: 作品轮**
 
 候选：《春晓》（襄阳）、《宿建德江》（钱塘）、《望洞庭湖赠张丞相》（岳阳）、《过故人庄》（襄阳）、《早寒江上有怀》（江上）、《夜归鹿门山歌》（鹿门山/襄阳）、《宿桐庐江寄广陵旧游》（钱塘/越州途中）、《与诸子登岘山》（襄阳）、《留别王维》（长安）。
 
-- [ ] **Step 3: 校验轮**
+- [x] **Step 3: 校验轮**
 
 写 `data/poets/tang/menghaoran.yaml` + 时间线自洽 + `pnpm build:data` 通过。
 
-- [ ] **Step 4: 写校对表 `docs/proofread/menghaoran.md`**
+- [x] **Step 4: 写校对表 `docs/proofread/menghaoran.md`**
 
-- [ ] **Step 5: 用户抽查 gate（同 Task 11 流程）**
+- [x] **Step 5: 用户抽查 gate（同 Task 11 流程）**
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add data/poets/tang/menghaoran.yaml docs/proofread/menghaoran.md
@@ -2304,23 +2304,23 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 **Interfaces:** 同 Task 11
 
-- [ ] **Step 1: 骨架轮**
+- [x] **Step 1: 骨架轮**
 
 资料源：《旧唐书·白居易传》《新唐书·白居易传》、朱金城《白居易集笺校》《白居易年谱》。已知锚点（须逐条核对）：772 生新郑；782-787 避乱江南（宿州符离、越中）;800 进士及第（长安）;803 校书郎；806 盩厔县尉；807 翰林学士、左拾遗；810 丁母忧居下邽；815 贬江州司马（浔阳）;818 移忠州刺史；820 还朝；822 出为杭州刺史（钱塘）;825 苏州刺史；827 秘书监还朝；829 太子宾客分司东都（洛阳）;846 卒于洛阳香山。
 
-- [ ] **Step 2: 作品轮**
+- [x] **Step 2: 作品轮**
 
 候选：《赋得古原草送别》（长安，少年作可标 uncertain）、《卖炭翁》（长安）、《长恨歌》（盩厔）、《琵琶行》（浔阳）、《钱塘湖春行》（杭州）、《忆江南》（苏州/洛阳）、《问刘十九》（洛阳）、《暮江吟》（杭州途中）、《大林寺桃花》（浔阳）、《观刈麦》（盩厔）。
 
-- [ ] **Step 3: 校验轮**
+- [x] **Step 3: 校验轮**
 
 写 `data/poets/tang/baijuyi.yaml` + 时间线自洽 + `pnpm build:data` 通过。
 
-- [ ] **Step 4: 写校对表 `docs/proofread/baijuyi.md`**
+- [x] **Step 4: 写校对表 `docs/proofread/baijuyi.md`**
 
-- [ ] **Step 5: 用户抽查 gate（同 Task 11 流程）**
+- [x] **Step 5: 用户抽查 gate（同 Task 11 流程）**
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add data/poets/tang/baijuyi.yaml docs/proofread/baijuyi.md
