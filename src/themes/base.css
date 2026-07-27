@@ -57,6 +57,12 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .grass-blade { position: absolute; bottom: 0; width: 2px; height: 18px; background: var(--accent); transform-origin: bottom center; animation: grass-sway 3s ease-in-out infinite; }
 @keyframes grass-sway { 0%,100% { transform: rotate(-3deg) } 50% { transform: rotate(3deg) } }
 
+.slow-dot { animation: slow-fade 4s ease-in-out infinite; }
+.slow-dot-1 { animation-delay: 0s; }
+.slow-dot-2 { animation-delay: .6s; }
+.slow-dot-3 { animation-delay: 1.2s; }
+@keyframes slow-fade { 0%,100% { opacity: .15 } 50% { opacity: .75 } }
+
 .quotes-section { position: relative; }
 .timeline-section { position: relative; }
 

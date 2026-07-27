@@ -6,9 +6,12 @@ import { poetThemes } from '../themes'
 import { PaperTexture } from '../components/PaperTexture'
 
 export function OverviewPage() {
-  const [index, setIndex] = useState<PoetIndexEntry[]>([])
+  const [index, setIndex] = useState<PoetIndexEntry[] | null>(null)
   useEffect(() => {
-    fetch('/data/index.json').then(r => r.json()).then(setIndex).catch(() => setIndex([]))
+    fetch('/data/index.json')
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
+      .then(setIndex)
+      .catch(() => setIndex(null))
   }, [])
   return (
     <main className="overview">
@@ -20,16 +23,20 @@ export function OverviewPage() {
           <span key={d} className="dynasty disabled" title="敬请期待">{d}</span>
         ))}
       </nav>
-      <div className="poet-wall">
-        {index.map(p => (
-          <Link key={p.id} to={`/poets/${p.dynasty}/${p.id}`} className="poet-card mounted-card">
-            <MotifIcon name={poetThemes[p.theme]?.motifs[0] ?? 'moon'} size={48} />
-            <span className="poet-name font-calligraphy">{p.name}</span>
-            <span className="poet-years">{p.birthYear} — {p.deathYear}</span>
-            <span className="poet-quote">{p.representativeLine}</span>
-          </Link>
-        ))}
-      </div>
+      {index === null ? (
+        <p className="load-error">索引加载失败，请刷新重试。</p>
+      ) : (
+        <div className="poet-wall">
+          {index.map(p => (
+            <Link key={p.id} to={`/poets/${p.dynasty}/${p.id}`} className="poet-card mounted-card">
+              <MotifIcon name={poetThemes[p.theme]?.motifs[0] ?? 'moon'} size={48} />
+              <span className="poet-name font-calligraphy">{p.name}</span>
+              <span className="poet-years">{p.birthYear} — {p.deathYear}</span>
+              <span className="poet-quote">{p.representativeLine}</span>
+            </Link>
+          ))}
+        </div>
+      )}
       <footer className="project-note">
         生平依据正史本传与权威年谱；地名坐标据谭其骧《中国历史地图集》复核；
         标「存疑」者为学界尚有争议之点位，宁缺毋滥。

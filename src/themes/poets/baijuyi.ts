@@ -12,6 +12,6 @@ export const baijuyiTheme: PoetTheme = {
   easterEggs: [
     { id: 'lute-notes', type: 'map-node', target: '浔阳' },
     { id: 'grass-sway', type: 'quote-hover' },
-    { id: 'slow-ending', type: 'decoration' },
+    { id: 'slow-ending', type: 'decoration', target: '洛阳' },
   ],
 }

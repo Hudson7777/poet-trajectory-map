@@ -15,11 +15,11 @@ export function PoetPage() {
   const { dynasty, poetId } = useParams<{ dynasty: string; poetId: string }>()
   const [retry, setRetry] = useState(0)
   const state = usePoetBundle(dynasty!, poetId!, retry)
-  const dynastyInfo = useDynasty(dynasty!)
+  const dynastyState = useDynasty(dynasty!, retry)
   const theme = poetThemes[poetId!] ?? poetThemes.libai
   useEffect(() => { applyPoetTheme(theme, poetId!) }, [theme, poetId])
 
-  if (state.status === 'error') {
+  if (state.status === 'error' || dynastyState.status === 'error') {
     return (
       <main className="load-error">
         <p>人物数据加载失败。</p>
@@ -27,10 +27,11 @@ export function PoetPage() {
       </main>
     )
   }
-  if (state.status === 'loading' || !dynastyInfo) {
+  if (state.status === 'loading' || dynastyState.status === 'loading') {
     return <main className="loading">加载中…</main>
   }
   const { bundle } = state
+  const dynastyInfo = dynastyState.dynasty
   return (
     <PoetStateProvider key={poetId} initialYear={bundle.poet.death.year}>
       <main className="poet-page">
