@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { Trajectory } from './Trajectory'
 import { CityMarker } from './CityMarker'
 import type { Stop } from '../../data/schemas'
@@ -30,24 +30,26 @@ describe('Trajectory', () => {
 })
 
 describe('CityMarker', () => {
-  it('普通节点为实心朱砂印点', () => {
+  it('普通组为实心朱砂印点，默认无年份/事件 text', () => {
     const { container } = render(
-      <svg><CityMarker stop={stops[0]} position={[100, 100]} highlighted={false} dimmed={false} onHover={() => {}} /></svg>,
+      <svg><CityMarker group={[stops[0]]} position={[100, 100]} highlighted={false} labelSide="right" showLabel={true} onHover={() => {}} onLock={() => {}} /></svg>,
     )
     expect(container.querySelector('circle[fill="var(--seal)"]')).not.toBeNull()
+    expect(container.querySelector('.city-year')).toBeNull()
+    expect(container.querySelector('.city-event')).toBeNull()
   })
-  it('存疑节点为空心虚线印点并带存疑标签', () => {
-    render(
-      <svg><CityMarker stop={stops[1]} position={[100, 100]} highlighted={false} dimmed={false} onHover={() => {}} /></svg>,
-    )
-    expect(screen.getByText('存疑')).toBeTruthy()
-  })
-  it('hover 触发 onHover 回调', () => {
-    const onHover = vi.fn()
+  it('存疑组为空心虚线印点并带存疑印章', () => {
     const { container } = render(
-      <svg><CityMarker stop={stops[0]} position={[100, 100]} highlighted={false} dimmed={false} onHover={onHover} /></svg>,
+      <svg><CityMarker group={[stops[1]]} position={[100, 100]} highlighted={false} labelSide="right" showLabel={true} onHover={() => {}} onLock={() => {}} /></svg>,
     )
-    fireEvent.mouseEnter(container.querySelector('.city-marker')!)
-    expect(onHover).toHaveBeenCalledWith(stops[0])
+    expect(container.querySelector('.uncertain-seal')).not.toBeNull()
+  })
+  it('click 触发 onLock 回调', () => {
+    const onLock = vi.fn()
+    const { container } = render(
+      <svg><CityMarker group={[stops[0]]} position={[100, 100]} highlighted={false} labelSide="right" showLabel={true} onHover={() => {}} onLock={onLock} /></svg>,
+    )
+    fireEvent.click(container.querySelector('.city-marker')!)
+    expect(onLock).toHaveBeenCalledWith([stops[0]])
   })
 })

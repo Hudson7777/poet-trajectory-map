@@ -4,21 +4,24 @@ import type { Stop } from '../data/schemas'
 interface PoetState {
   year: number
   hoveredStop: Stop | null
+  lockedStop: Stop[] | null
   openWork: string | null
   setYear: (y: number) => void
   setHoveredStop: (s: Stop | null) => void
+  setLockedStop: (g: Stop[] | null) => void
   setOpenWork: (title: string | null) => void
 }
 
 const Ctx = createContext<PoetState | null>(null)
 
-/** key={poetId} 使用本 Provider 时强制 remount，切换人物后 year/hoveredStop/openWork 全部重置 */
+/** key={poetId} 使用本 Provider 时强制 remount，切换人物后 year/hoveredStop/lockedStop/openWork 全部重置 */
 export function PoetStateProvider({ initialYear, children }: { initialYear: number; children: ReactNode }) {
   const [year, setYear] = useState(initialYear)
   const [hoveredStop, setHoveredStop] = useState<Stop | null>(null)
+  const [lockedStop, setLockedStop] = useState<Stop[] | null>(null)
   const [openWork, setOpenWork] = useState<string | null>(null)
   return (
-    <Ctx.Provider value={{ year, hoveredStop, openWork, setYear, setHoveredStop, setOpenWork }}>
+    <Ctx.Provider value={{ year, hoveredStop, lockedStop, openWork, setYear, setHoveredStop, setLockedStop, setOpenWork }}>
       {children}
     </Ctx.Provider>
   )

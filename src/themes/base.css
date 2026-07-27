@@ -17,10 +17,21 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .trajectory-ink { stroke: #2e2a24; stroke-width: 3; stroke-dasharray: 14 7 3 7; stroke-linecap: round; opacity: .85; }
 .trajectory-gold { stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; opacity: .9; }
 .trajectory-beacon { stroke: #6b6b66; stroke-width: 3; stroke-dasharray: 10 6; opacity: .8; }
-.city-year { font-size: 15px; fill: var(--seal); font-weight: bold; }
-.city-event { font-size: 14px; fill: var(--ink); }
-.uncertain-tag { font-size: 12px; fill: var(--seal); opacity: .8; }
+.city-label { font-size: 14px; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+.uncertain-seal text { font-size: 9px; fill: var(--seal); font-family: var(--font-calligraphy), "Kaiti SC", serif; }
 .city-marker, .work-marker { cursor: pointer; transition: opacity .3s; }
+
+/* ===== 卷轴 tooltip ===== */
+.marker-tooltip { filter: drop-shadow(0 2px 6px rgba(80, 60, 30, .25)); }
+.marker-tooltip-title { font-size: 16px; fill: var(--ink); font-weight: bold; }
+.marker-tooltip-uncertain-tag { font-size: 11px; fill: var(--seal); }
+.marker-tooltip-year { font-size: 13px; fill: var(--seal); font-weight: bold; }
+.marker-tooltip-event { font-size: 12px; fill: var(--ink); }
+.marker-tooltip-role { font-size: 11px; fill: var(--ink); opacity: .65; }
+.marker-tooltip-uncertain { font-size: 10px; fill: var(--seal); opacity: .8; }
+.marker-tooltip-close { cursor: pointer; }
+.marker-tooltip-close-x { font-size: 16px; fill: var(--ink); opacity: .55; }
+.marker-tooltip-close:hover .marker-tooltip-close-x { opacity: 1; }
 .font-calligraphy { font-family: var(--font-calligraphy), "Kaiti SC", "STKaiti", "KaiTi", serif; }
 .section-title { font-size: 28px; letter-spacing: 8px; margin: 48px 0 24px; }
 .quote-line { writing-mode: vertical-rl; font-size: 34px; letter-spacing: 6px; }
