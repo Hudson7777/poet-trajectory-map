@@ -12,6 +12,9 @@ import { LakeLevel } from './LakeLevel'
 import { SnowMountain } from './SnowMountain'
 import { ZenWhitespace } from './ZenWhitespace'
 import { GrassSway } from './GrassSway'
+import { MoonRise } from './MoonRise'
+import { FallingLeaves } from './FallingLeaves'
+import { MistDrift } from './MistDrift'
 import { SlowEnding } from './SlowEnding'
 
 export const easterEggComponents: Record<string, (props: { target?: string; position?: [number, number] }) => ReactElement | null> = {
@@ -27,6 +30,9 @@ export const easterEggComponents: Record<string, (props: { target?: string; posi
   'snow-mountain': SnowMountain,
   'zen-whitespace': ZenWhitespace,
   'grass-sway': GrassSway,
+  'moon-rise': MoonRise,
+  'falling-leaves': FallingLeaves,
+  'mist-drift': MistDrift,
   'slow-ending': SlowEnding,
 }
 

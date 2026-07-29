@@ -20,5 +20,6 @@ export const libaiTheme: PoetTheme = {
     { id: 'catch-moon', type: 'map-node', target: '当涂' },
     { id: 'westward-suiye', type: 'decoration' },
     { id: 'hanlin-seal', type: 'timeline', target: '742' },
+    { id: 'moon-rise', type: 'quote-hover' },
   ],
 }

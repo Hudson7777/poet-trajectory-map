@@ -20,5 +20,6 @@ export const wangweiTheme: PoetTheme = {
     { id: 'bamboo-sway', type: 'map-node', target: '辋川' },
     { id: 'zen-whitespace', type: 'decoration' },
     { id: 'mountain-ripple', type: 'map-node', target: '辋川' },
+    { id: 'mist-drift', type: 'quote-hover' },
   ],
 }

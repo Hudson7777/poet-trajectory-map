@@ -19,5 +19,6 @@ export const dufuTheme: PoetTheme = {
   easterEggs: [
     { id: 'straw-hut-hover', type: 'map-node', target: '成都' },
     { id: 'snow-mountain', type: 'decoration' },
+    { id: 'falling-leaves', type: 'quote-hover' },
   ],
 }
