@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { usePoetBundle } from '../components/map/usePoetBundle'
 import { useDynasty } from '../components/map/useDynasty'
+import { usePoetIndex } from '../components/map/usePoetIndex'
 import { PoetStateProvider } from './poet-state'
 import { HeroMap } from '../components/map/HeroMap'
 import { MiniMap } from '../components/map/MiniMap'
@@ -19,8 +20,11 @@ export function PoetPage() {
   const [retry, setRetry] = useState(0)
   const state = usePoetBundle(dynasty!, poetId!, retry)
   const dynastyState = useDynasty(dynasty!, retry)
+  const indexState = usePoetIndex()
   const theme = poetThemes[poetId!] ?? poetThemes.libai
   useEffect(() => { applyPoetTheme(theme, poetId!) }, [theme, poetId])
+  // 切换人物后回到页面顶部
+  useEffect(() => { window.scrollTo(0, 0) }, [poetId])
 
   // Hero 地图滚出视口后，右下角浮现迷你地图保持年表-地图联动可见
   const heroRef = useRef<HTMLDivElement>(null)
@@ -53,6 +57,22 @@ export function PoetPage() {
     <PoetStateProvider key={poetId} initialYear={bundle.poet.death.year}>
       <main className="poet-page">
         <PaperTexture />
+        {indexState.status === 'loaded' && (
+          <nav className="poet-nav">
+            <Link to="/poets" className="poet-nav-back">← 返回总览</Link>
+            <div className="poet-nav-switch">
+              {indexState.index.filter(p => p.dynasty === dynasty).map(p => (
+                <Link
+                  key={p.id}
+                  to={`/poets/${p.dynasty}/${p.id}`}
+                  className={`poet-nav-item font-calligraphy${p.id === poetId ? ' active' : ''}`}
+                >
+                  {p.name}
+                </Link>
+              ))}
+            </div>
+          </nav>
+        )}
         <div ref={heroRef}>
           <HeroMap bundle={bundle} theme={theme} dynasty={dynastyInfo} />
         </div>

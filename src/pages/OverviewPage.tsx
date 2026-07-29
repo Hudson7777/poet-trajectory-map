@@ -1,35 +1,31 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import type { PoetIndexEntry } from '../data/types'
 import { MotifIcon } from '../themes/motifs/MotifIcon'
 import { poetThemes, resetPoetTheme, CALLIGRAPHY_FONTS } from '../themes'
 import { PaperTexture } from '../components/PaperTexture'
+import { usePoetIndex } from '../components/map/usePoetIndex'
+import { useDynasties } from '../components/map/useDynasty'
 
 export function OverviewPage() {
-  const [index, setIndex] = useState<PoetIndexEntry[]>([])
-  const [error, setError] = useState(false)
-  useEffect(() => {
-    fetch('/data/index.json')
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
-      .then(setIndex)
-      .catch(() => setError(true))
-  }, [])
+  const indexState = usePoetIndex()
+  const dynastiesState = useDynasties()
   useEffect(() => { resetPoetTheme() }, [])
   return (
     <main className="overview">
       <PaperTexture />
       <h1 className="site-title font-calligraphy">文人生命轨迹地图</h1>
-      <nav className="dynasty-switcher">
-        <span className="dynasty active">唐</span>
-        {['宋', '元', '明', '清'].map(d => (
-          <span key={d} className="dynasty disabled" title="敬请期待">{d}</span>
-        ))}
-      </nav>
-      {error ? (
+      {dynastiesState.status === 'loaded' && (
+        <nav className="dynasty-switcher">
+          {dynastiesState.dynasties.map(d => (
+            <span key={d.id} className="dynasty active">{d.name}</span>
+          ))}
+        </nav>
+      )}
+      {indexState.status === 'error' ? (
         <p className="load-error">索引加载失败，请刷新重试。</p>
       ) : (
         <div className="poet-wall">
-          {index.map((p, i) => {
+          {indexState.status === 'loaded' && indexState.index.map((p, i) => {
             const t = poetThemes[p.theme]
             const callig = t ? { fontFamily: `${CALLIGRAPHY_FONTS[t.calligraphy]}, "Kaiti SC", "STKaiti", "KaiTi", serif` } : undefined
             return (

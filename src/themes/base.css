@@ -174,6 +174,15 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
   .mini-map { width: 180px; right: 12px; bottom: 12px; }
 }
 
+/* ===== 人物页导航条 ===== */
+.poet-nav { display: flex; align-items: center; gap: 24px; padding: 16px 40px 0; flex-wrap: wrap; }
+.poet-nav-back { font-size: 15px; color: var(--ink); text-decoration: none; opacity: .65; flex-shrink: 0; }
+.poet-nav-back:hover { opacity: 1; }
+.poet-nav-switch { display: flex; gap: 20px; flex-wrap: wrap; }
+.poet-nav-item { font-size: 20px; color: var(--ink); text-decoration: none; opacity: .55; padding-bottom: 2px; }
+.poet-nav-item:hover { opacity: .85; }
+.poet-nav-item.active { opacity: 1; border-bottom: 2px solid var(--seal); }
+
 /* ===== 总览页 / 纸纹 / 托裱卡片 / 移动端 ===== */
 .paper-texture-svg { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 .overview, .poet-page { position: relative; z-index: 1; }
