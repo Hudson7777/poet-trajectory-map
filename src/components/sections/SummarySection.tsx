@@ -13,7 +13,7 @@ export function SummarySection({ poet, poetId = 'libai' }: { poet: Poet; poetId?
   ]
   return (
     <section className="summary-section">
-      <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={20} />其人</h2>
+      <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={28} />其人</h2>
       <p className="review">{review}</p>
       <div className="stats">
         {items.map(i => (

@@ -4,11 +4,13 @@ import { usePoetState } from '../../pages/poet-state'
 import { poetThemes } from '../../themes'
 import { MotifIcon } from '../../themes/motifs/MotifIcon'
 import { groupIntoVolumes } from './volumeGrouping'
+import { VOLUME_NAMES } from './volumeNames'
 
 export function WorksSection({ works, poetId = 'libai' }: { works: Work[]; poetId?: string }) {
   const { openWork, setOpenWork } = usePoetState()
   const theme = poetThemes[poetId] ?? poetThemes.libai
   const volumes = groupIntoVolumes(works)
+  const volumeNames = VOLUME_NAMES[poetId]
 
   useEffect(() => {
     if (!openWork) return
@@ -17,11 +19,14 @@ export function WorksSection({ works, poetId = 'libai' }: { works: Work[]; poetI
 
   return (
     <section className="works-section">
-      <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={20} />作品集</h2>
-      {volumes.map(vol => (
+      <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={28} />作品集</h2>
+      {volumes.map((vol, volIndex) => (
         <div key={vol.title} className="volume">
           <div className="volume-header">
             <span className="volume-title font-calligraphy">{vol.title}</span>
+            {volumeNames?.[volIndex] && (
+              <span className="volume-subtitle">{volumeNames[volIndex]}</span>
+            )}
             <span className="volume-years font-calligraphy">{vol.startYear}—{vol.endYear}</span>
           </div>
           {vol.works.map(w => {

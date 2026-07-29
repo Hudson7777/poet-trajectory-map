@@ -21,6 +21,11 @@ const DASH_BY_KIND: Record<BrushKind, string | undefined> = {
 
 const GRADIENT_KINDS: BrushKind[] = ['gold', 'spring', 'fade']
 
+/** 焦墨笔触（杜甫）在安史之乱（755）后转为重笔：intense 加粗加深。HeroMap 与 MiniMap 共用。 */
+export function isIntenseBrush(brush: BrushStyle, year: number): boolean {
+  return brush.kind === 'dry' && year >= 755
+}
+
 /** 颜色加深：intense 时主线条/晕染加深，体现杜甫安史之乱后笔力沉郁。 */
 function deepen(hex: string): string {
   const m = /^#([\da-f]{6})$/i.exec(hex.trim())

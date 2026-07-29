@@ -3,7 +3,7 @@ import type { PoetBundle } from '../../data/types'
 import type { DynastyInfo, PoetTheme } from '../../themes/types'
 import { usePoetState } from '../../pages/poet-state'
 import { InkMap, type InkMapController } from './InkMap'
-import { Trajectory } from './Trajectory'
+import { Trajectory, isIntenseBrush } from './Trajectory'
 import { BrushDefs } from './brushDefs'
 import { CityMarker, type LabelSide } from './CityMarker'
 import { MarkerTooltip } from './MarkerTooltip'
@@ -11,12 +11,7 @@ import { WorkMarker } from './WorkMarker'
 import { createProjection, visibleStops } from './projection'
 import { groupStopsByCity } from './groupStops'
 import { renderEasterEggs } from '../../themes/easter-eggs/registry'
-
-const basemapModules = import.meta.glob('../../../data/geo/*/basemap.svg', {
-  query: '?raw',
-  eager: true,
-  import: 'default',
-}) as Record<string, string>
+import { getBasemapRaw } from './basemaps'
 
 const LABEL_SIDES: LabelSide[] = ['right', 'top', 'left', 'bottom']
 
@@ -61,7 +56,7 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
     const p = dynasty.projection
     return createProjection(p.lon0, p.lat0, p.s, p.sy)
   }, [dynasty])
-  const basemapRaw = basemapModules[`../../../data/geo/${dynasty.id}/basemap.svg`] ?? ''
+  const basemapRaw = getBasemapRaw(dynasty.id)
   const visible = useMemo(() => visibleStops(bundle.poet.stops, year), [bundle.poet.stops, year])
   const groups = useMemo(() => groupStopsByCity(visible), [visible])
   const [vbX, vbY, vbW, vbH] = dynasty.viewBox.split(' ').map(Number)
@@ -75,8 +70,7 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
 
-  // 焦墨笔触（杜甫）在安史之乱（755）后转为重笔：intense 加粗加深
-  const intense = theme.brush.kind === 'dry' && year >= 755
+  const intense = isIntenseBrush(theme.brush, year)
 
   // locked 优先于 hover：决定哪个组展示 tooltip
   const hoveredGroup = hoveredStop

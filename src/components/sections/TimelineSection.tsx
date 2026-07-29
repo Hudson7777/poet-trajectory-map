@@ -9,7 +9,7 @@ export function TimelineSection({ stops, poetId }: { stops: Stop[]; poetId: stri
   const theme = poetThemes[poetId] ?? poetThemes.libai
   return (
     <section className="timeline-section">
-      <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={20} />生平年表</h2>
+      <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={28} />生平年表</h2>
       <ol>
         {stops.map(s => (
           <li

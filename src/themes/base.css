@@ -48,7 +48,8 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
   box-shadow: inset 0 1px 0 #e5dcc3, inset 0 -1px 0 #e5dcc3;
 }
 .volume-title { font-size: 26px; letter-spacing: 6px; color: var(--ink); }
-.volume-years { font-size: 16px; color: var(--accent); opacity: .85; letter-spacing: 2px; }
+.volume-subtitle { font-size: 18px; letter-spacing: 3px; color: var(--accent); }
+.volume-years { font-size: 16px; color: var(--accent); opacity: .85; letter-spacing: 2px; margin-left: auto; }
 .album-card {
   position: relative;
   background: #f8f4e8;
@@ -67,18 +68,17 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
   box-shadow: 0 6px 18px rgba(80, 60, 30, .22);
 }
 .album-card.open { border-color: var(--seal); outline-color: var(--accent-soft); }
-.album-card header { cursor: pointer; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.album-meta { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+.album-card header { cursor: pointer; display: flex; align-items: center; gap: 16px; }
+.album-meta { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; min-width: 56px; }
 .album-year { font-size: 22px; color: var(--seal); line-height: 1.1; }
 .album-city { font-size: 13px; opacity: .7; }
 .album-genre { font-size: 12px; opacity: .55; }
 .album-title {
-  writing-mode: vertical-rl;
+  flex: 1;
   font-size: 20px;
-  letter-spacing: 4px;
-  line-height: 1.2;
+  letter-spacing: 2px;
+  line-height: 1.4;
   color: var(--ink);
-  text-align: start;
 }
 .album-detail {
   margin-top: 16px;
@@ -155,6 +155,25 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
   .map-zoom-hint { display: none; }
 }
 
+/* ===== 悬浮迷你地图 ===== */
+.mini-map {
+  position: fixed; right: 24px; bottom: 24px; z-index: 10;
+  width: 300px; padding: 6px; cursor: pointer;
+  background: var(--paper); border: 1px solid #c9b992; border-radius: 4px;
+  box-shadow: 0 4px 18px rgba(80, 60, 30, .3);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.mini-map:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(80, 60, 30, .38); }
+.mini-map-svg { width: 100%; height: auto; display: block; border-radius: 2px; }
+.mini-map-year {
+  position: absolute; left: 12px; bottom: 10px;
+  font-size: 20px; color: var(--seal);
+  text-shadow: 0 0 4px var(--paper), 0 0 4px var(--paper);
+}
+@media (max-width: 768px) {
+  .mini-map { width: 180px; right: 12px; bottom: 12px; }
+}
+
 /* ===== 总览页 / 纸纹 / 托裱卡片 / 移动端 ===== */
 .paper-texture-svg { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 .overview, .poet-page { position: relative; z-index: 1; }
@@ -193,11 +212,13 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .tl-role { margin-left: auto; opacity: .6; font-size: 14px; }
 .tl-uncertain { color: var(--seal); font-size: 12px; border: 1px dashed var(--seal); padding: 0 4px; border-radius: 3px; }
 .stats { display: flex; gap: 32px; padding: 0 40px 24px; }
+.stat { flex: 1; }
 .stat-value { font-size: 40px; color: var(--accent); }
 .stat-label { font-size: 14px; opacity: .6; }
-.review { padding: 0 40px 24px; line-height: 2; max-width: 78ch; }
-.quotes { display: flex; gap: 48px; padding: 0 40px 32px; min-height: 260px; align-items: flex-start; }
-.quote cite { display: block; margin-top: 12px; font-size: 13px; opacity: .5; }
+.review { padding: 0 40px 24px; line-height: 2; }
+.quotes { display: flex; gap: 24px; padding: 0 40px 32px; min-height: 260px; align-items: flex-start; justify-content: space-evenly; }
+.quote { flex: 0 0 120px; display: flex; flex-direction: column; align-items: center; }
+.quote cite { display: block; margin-top: 12px; font-size: 13px; opacity: .5; text-align: center; }
 .works-section { padding: 0 40px 64px; }
 .hero-map .ink-map { width: 100%; height: 78vh; display: block; }
 @media (max-width: 768px) {

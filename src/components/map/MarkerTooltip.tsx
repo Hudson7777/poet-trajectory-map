@@ -9,16 +9,66 @@ interface MarkerTooltipProps {
   flip?: boolean
 }
 
-const ROW_H = 26
 const PAD_X = 14
 const PAD_TOP = 18
+const PAD_BOTTOM = 14
 const WIDTH = 240
+const TEXT_X = 52
+const TEXT_W = WIDTH - TEXT_X - PAD_X
+const EVENT_FS = 12
+const ROLE_FS = 11
+const UNCERTAIN_FS = 10
+const LINE_GAP = 3
+
+/** 按可用像素宽度折行：CJK 按全宽计，ASCII 按 0.55 宽计 */
+function wrapText(text: string, fontSize: number): string[] {
+  const maxUnits = TEXT_W / fontSize
+  const lines: string[] = []
+  let cur = ''
+  let w = 0
+  for (const ch of text) {
+    const cw = ch.charCodeAt(0) < 256 ? 0.55 : 1
+    if (cur && w + cw > maxUnits) {
+      lines.push(cur)
+      cur = ch
+      w = cw
+    } else {
+      cur += ch
+      w += cw
+    }
+  }
+  if (cur) lines.push(cur)
+  return lines
+}
+
+interface RowLayout {
+  stop: Stop
+  eventLines: string[]
+  roleLines: string[]
+  uncertainLines: string[]
+  height: number
+}
+
+function layoutRows(stops: Stop[]): RowLayout[] {
+  return stops.map(stop => {
+    const eventLines = wrapText(`${stop.city} · ${stop.event}`, EVENT_FS)
+    const roleLines = wrapText(stop.role, ROLE_FS)
+    const uncertainLines = stop.uncertain ? wrapText(stop.uncertain, UNCERTAIN_FS) : []
+    const height =
+      eventLines.length * (EVENT_FS + LINE_GAP) +
+      roleLines.length * (ROLE_FS + LINE_GAP) +
+      uncertainLines.length * (UNCERTAIN_FS + LINE_GAP) +
+      8
+    return { stop, eventLines, roleLines, uncertainLines, height }
+  })
+}
 
 export function MarkerTooltip({ stops, position, onClose, flip = false }: MarkerTooltipProps) {
   const [x, y] = position
   const uncertain = isUncertainGroup(stops)
-  const bodyH = stops.length * ROW_H
-  const height = PAD_TOP + bodyH + 14
+  const rows = layoutRows(stops)
+  const bodyH = rows.reduce((sum, r) => sum + r.height, 0)
+  const height = PAD_TOP + bodyH + PAD_BOTTOM
   const tipX = flip ? x - WIDTH - 14 : x + 14
   const tipY = y - height - 8
 
@@ -52,16 +102,27 @@ export function MarkerTooltip({ stops, position, onClose, flip = false }: Marker
         <text x={WIDTH - 30} y={PAD_TOP} textAnchor="end" className="marker-tooltip-uncertain-tag">存疑</text>
       )}
 
-      {stops.map((s, i) => {
-        const rowY = PAD_TOP + 16 + i * ROW_H
+      {rows.map((row, i) => {
+        const rowY = PAD_TOP + 16 + rows.slice(0, i).reduce((s, r) => s + r.height, 0)
+        let lineY = 0
         return (
-          <g key={`${s.year}-${s.city}-${i}`} transform={`translate(${PAD_X} ${rowY})`}>
-            <text x={0} y={0} className="marker-tooltip-year font-calligraphy">{s.year}</text>
-            <text x={52} y={0} className="marker-tooltip-event">{s.city} · {s.event}</text>
-            <text x={52} y={14} className="marker-tooltip-role">{s.role}</text>
-            {s.uncertain && (
-              <text x={52} y={28} className="marker-tooltip-uncertain">{s.uncertain}</text>
-            )}
+          <g key={`${row.stop.year}-${row.stop.city}-${i}`} transform={`translate(${PAD_X} ${rowY})`}>
+            <text x={0} y={0} className="marker-tooltip-year font-calligraphy">{row.stop.year}</text>
+            {row.eventLines.map((line, j) => {
+              const ly = lineY
+              lineY += EVENT_FS + LINE_GAP
+              return <text key={j} x={TEXT_X} y={ly} className="marker-tooltip-event">{line}</text>
+            })}
+            {row.roleLines.map((line, j) => {
+              const ly = lineY
+              lineY += ROLE_FS + LINE_GAP
+              return <text key={j} x={TEXT_X} y={ly} className="marker-tooltip-role">{line}</text>
+            })}
+            {row.uncertainLines.map((line, j) => {
+              const ly = lineY
+              lineY += UNCERTAIN_FS + LINE_GAP
+              return <text key={j} x={TEXT_X} y={ly} className="marker-tooltip-uncertain">{line}</text>
+            })}
           </g>
         )
       })}
