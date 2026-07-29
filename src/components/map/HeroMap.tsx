@@ -28,7 +28,11 @@ function MapOverlay({ theme, poetName }: { theme: PoetTheme; poetName: string })
   return (
     <div className="map-overlay" aria-hidden="true">
       <div className="map-inscription">
-        <span className="map-inscription-line font-calligraphy">{theme.inscription.line}</span>
+        <span className="map-inscription-line font-calligraphy">
+          {theme.inscription.line.split('').map((ch, i) => (
+            <span key={i} className="insc-char" style={{ animationDelay: `${0.3 + i * 0.07}s` }}>{ch}</span>
+          ))}
+        </span>
         <span className="map-inscription-sub">{theme.inscription.sub}</span>
       </div>
       <div className="map-seal-wrap">
