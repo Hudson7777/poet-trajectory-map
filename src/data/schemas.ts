@@ -63,6 +63,7 @@ export const PoetSchema = z.object({
       age: z.number().int().positive(),
     }),
   }),
+  signature: z.array(z.string().min(1)).length(5),
   stops: z.array(StopSchema).min(1),
   works: z.array(WorkSchema),
 })

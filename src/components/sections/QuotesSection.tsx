@@ -1,11 +1,14 @@
-import type { Work } from '../../data/schemas'
+import type { Poet } from '../../data/schemas'
 import { poetThemes } from '../../themes'
 import { MotifIcon } from '../../themes/motifs/MotifIcon'
 import { renderEasterEggs } from '../../themes/easter-eggs/registry'
 
-export function QuotesSection({ works, poetId }: { works: Work[]; poetId: string }) {
+export function QuotesSection({ poet, poetId }: { poet: Poet; poetId: string }) {
   const theme = poetThemes[poetId] ?? poetThemes.libai
-  const quotes = works.flatMap(w => w.famous.map(line => ({ line, title: w.title }))).slice(0, 5)
+  const quotes = poet.signature.map(line => ({
+    line,
+    title: poet.works.find(w => w.famous.includes(line))?.title ?? '',
+  }))
   return (
     <section className="quotes-section">
       <h2 className="section-title"><MotifIcon name={theme.motifs[0]} size={28} />精华名句</h2>

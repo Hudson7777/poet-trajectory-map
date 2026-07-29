@@ -18,12 +18,17 @@ const basePoet: Poet = {
   birth: { year: 701, place: '碎叶' }, death: { year: 762, place: '当涂' },
   theme: 'libai',
   summary: { review: '评传', stats: { cities: 18, works: '存诗约千首', topOffice: '翰林供奉', age: 61 } },
+  signature: ['床前明月光', '佳句二', '佳句三', '佳句四', '佳句五'],
   stops: [
     { year: 726, city: '扬州', event: '作《静夜思》', role: '布衣', source: '《李太白全集》卷六' },
     { year: 742, city: '长安', event: '供奉翰林', role: '翰林供奉', source: '《旧唐书·文苑传》' },
   ],
   works: [
     { title: '静夜思', year: 726, city: '扬州', genre: '诗', text: '床前明月光，疑是地上霜。举头望明月，低头思故乡。', background: '开元十四年旅寓扬州作', famous: ['床前明月光'], source: '《李太白全集》卷六' },
+    { title: '作品二', year: 735, city: '洛阳', genre: '诗', text: '佳句二。其余从略。', background: '背景', famous: ['佳句二'], source: '出处' },
+    { title: '作品三', year: 745, city: '长安', genre: '诗', text: '佳句三。其余从略。', background: '背景', famous: ['佳句三'], source: '出处' },
+    { title: '作品四', year: 750, city: '洛阳', genre: '诗', text: '佳句四。其余从略。', background: '背景', famous: ['佳句四'], source: '出处' },
+    { title: '作品五', year: 760, city: '扬州', genre: '诗', text: '佳句五。其余从略。', background: '背景', famous: ['佳句五'], source: '出处' },
   ],
 }
 
@@ -50,5 +55,13 @@ describe('validatePoet', () => {
   it('名句不在原文中报错', () => {
     const poet = { ...basePoet, works: [{ ...basePoet.works[0], famous: ['不存在的句子'] }] }
     expect(validatePoet(poet, cities, dynasty)[0]).toMatch('不在原文')
+  })
+  it('signature 句不属于任何作品 famous 报错', () => {
+    const poet = { ...basePoet, signature: ['不存在的句子', '佳句二', '佳句三', '佳句四', '佳句五'] }
+    expect(validatePoet(poet, cities, dynasty)[0]).toMatch('不属于任何作品')
+  })
+  it('signature 多句出自同一作品报错', () => {
+    const poet = { ...basePoet, signature: ['床前明月光', '佳句二', '佳句二', '佳句四', '佳句五'] }
+    expect(validatePoet(poet, cities, dynasty).some(e => e.includes('同一作品'))).toBe(true)
   })
 })

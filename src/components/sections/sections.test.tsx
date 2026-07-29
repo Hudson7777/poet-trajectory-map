@@ -12,6 +12,8 @@ const works: Work[] = [
 ]
 const poet = {
   summary: { review: '李白，字太白，兴圣皇帝九世孙。', stats: { cities: 18, works: '存诗约千首', topOffice: '翰林供奉', age: 61 } },
+  signature: ['床前明月光', '佳句二', '佳句三', '佳句四', '佳句五'],
+  works,
 } as Poet
 
 describe('SummarySection', () => {
@@ -24,8 +26,8 @@ describe('SummarySection', () => {
 })
 
 describe('QuotesSection', () => {
-  it('聚合名句最多 5 句并标注出处', () => {
-    render(<QuotesSection works={works} poetId="libai" />)
+  it('渲染 signature 名句并标注出处作品', () => {
+    render(<QuotesSection poet={poet} poetId="libai" />)
     expect(screen.getByText('床前明月光')).toBeTruthy()
     expect(screen.getByText('《静夜思》')).toBeTruthy()
   })

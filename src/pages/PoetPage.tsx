@@ -62,7 +62,7 @@ export function PoetPage() {
         <SectionDivider svg={theme.divider} />
         <SummarySection poet={bundle.poet} poetId={poetId!} />
         <SectionDivider svg={theme.divider} />
-        <QuotesSection works={bundle.poet.works} poetId={poetId!} />
+        <QuotesSection poet={bundle.poet} poetId={poetId!} />
         <SectionDivider svg={theme.divider} />
         <WorksSection works={bundle.poet.works} poetId={poetId!} />
       </main>

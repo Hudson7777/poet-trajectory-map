@@ -25,5 +25,16 @@ export function validatePoet(poet: Poet, cities: CityEntry[], dynasty: DynastyEn
       if (!work.text.includes(line)) errors.push(`作品「${work.title}」名句「${line}」不在原文中`)
     }
   }
+  const sigOwners = new Set<number>()
+  for (const line of poet.signature) {
+    const idx = poet.works.findIndex(w => w.famous.includes(line))
+    if (idx === -1) {
+      errors.push(`signature 句「${line}」不属于任何作品的 famous`)
+    } else if (sigOwners.has(idx)) {
+      errors.push(`signature 多句出自同一作品「${poet.works[idx].title}」`)
+    } else {
+      sigOwners.add(idx)
+    }
+  }
   return errors
 }

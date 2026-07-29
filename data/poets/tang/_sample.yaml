@@ -8,6 +8,12 @@ theme: libai
 summary:
   review: 评传样例
   stats: { cities: 3, works: 存诗样例, topOffice: 翰林供奉, age: 61 }
+signature:
+  - 佳句一
+  - 佳句二
+  - 佳句三
+  - 佳句四
+  - 佳句五
 stops:
   - { year: 726, city: 扬州, event: 样例事件, role: 布衣, source: 样例出处 }
 works:
