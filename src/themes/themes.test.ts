@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { poetThemes, applyPoetTheme } from './index'
+import { poetThemes, applyPoetTheme, resetPoetTheme, THEME_VARS } from './index'
 import type { PoetTheme } from './types'
 
 const REQUIRED_TOKENS: (keyof PoetTheme)[] = ['accent', 'accentSoft', 'inkTone', 'paperTone', 'seal', 'motifs', 'calligraphy', 'brush', 'divider', 'inscription']
@@ -30,5 +30,12 @@ describe('applyPoetTheme', () => {
     const el = document.documentElement
     expect(el.dataset.poet).toBe('libai')
     expect(el.style.getPropertyValue('--accent')).toBe(poetThemes.libai.accent)
+  })
+  it('resetPoetTheme 复位全部主题变量与 data-poet', () => {
+    applyPoetTheme(poetThemes.libai, 'libai')
+    resetPoetTheme()
+    const el = document.documentElement
+    expect(el.dataset.poet).toBeUndefined()
+    for (const v of THEME_VARS) expect(el.style.getPropertyValue(v)).toBe('')
   })
 })

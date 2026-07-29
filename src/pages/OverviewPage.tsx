@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { PoetIndexEntry } from '../data/types'
 import { MotifIcon } from '../themes/motifs/MotifIcon'
-import { poetThemes } from '../themes'
+import { poetThemes, resetPoetTheme, CALLIGRAPHY_FONTS } from '../themes'
 import { PaperTexture } from '../components/PaperTexture'
 
 export function OverviewPage() {
@@ -14,6 +14,7 @@ export function OverviewPage() {
       .then(setIndex)
       .catch(() => setError(true))
   }, [])
+  useEffect(() => { resetPoetTheme() }, [])
   return (
     <main className="overview">
       <PaperTexture />
@@ -28,14 +29,18 @@ export function OverviewPage() {
         <p className="load-error">索引加载失败，请刷新重试。</p>
       ) : (
         <div className="poet-wall">
-          {index.map(p => (
-            <Link key={p.id} to={`/poets/${p.dynasty}/${p.id}`} className="poet-card mounted-card">
-              <MotifIcon name={poetThemes[p.theme]?.motifs[0] ?? 'moon'} size={48} />
-              <span className="poet-name font-calligraphy">{p.name}</span>
-              <span className="poet-years font-calligraphy">{p.birthYear} — {p.deathYear}</span>
-              <span className="poet-quote">{p.representativeLine}</span>
-            </Link>
-          ))}
+          {index.map((p, i) => {
+            const t = poetThemes[p.theme]
+            const callig = t ? { fontFamily: `${CALLIGRAPHY_FONTS[t.calligraphy]}, "Kaiti SC", "STKaiti", "KaiTi", serif` } : undefined
+            return (
+              <Link key={p.id} to={`/poets/${p.dynasty}/${p.id}`} className="poet-card mounted-card" style={{ animationDelay: `${Math.min(i * 90, 600)}ms` }}>
+                <MotifIcon name={t?.motifs[0] ?? 'moon'} size={48} />
+                <span className="poet-name font-calligraphy" style={callig}>{p.name}</span>
+                <span className="poet-years font-calligraphy" style={callig}>{p.birthYear} — {p.deathYear}</span>
+                <span className="poet-quote">{p.representativeLine}</span>
+              </Link>
+            )
+          })}
         </div>
       )}
       <footer className="project-note">

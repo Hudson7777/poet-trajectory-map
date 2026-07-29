@@ -183,9 +183,9 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .dynasty.active { border-bottom: 3px solid var(--seal); font-weight: bold; }
 .dynasty.disabled { opacity: .35; cursor: not-allowed; }
 .poet-wall { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; padding: 0 40px 40px; }
-.poet-card { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); }
+.poet-card { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); opacity: 0; animation: card-rise .6s ease-out forwards; }
 .poet-name { font-size: 32px; }
-.poet-years { opacity: .6; font-size: 14px; }
+.poet-years { opacity: .6; font-size: 18px; }
 .poet-quote { font-size: 15px; opacity: .75; }
 .project-note { text-align: center; font-size: 13px; opacity: .55; padding: 24px 40px 48px; line-height: 1.8; }
 .time-slider-wrap { display: flex; align-items: center; gap: 16px; padding: 8px 40px; }
@@ -226,4 +226,11 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
   .site-title { font-size: 30px; letter-spacing: 8px; }
   .quotes { gap: 20px; overflow-x: auto; }
   .stats { flex-wrap: wrap; gap: 16px; }
+}
+
+/* ===== 动效 keyframes 与 reduced-motion 兜底 ===== */
+@keyframes card-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .poet-card, .timeline-section li { opacity: 1 !important; transform: none !important; }
 }

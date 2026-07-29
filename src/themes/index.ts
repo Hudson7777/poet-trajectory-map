@@ -17,13 +17,25 @@ export const CALLIGRAPHY_FONTS: Record<PoetTheme['calligraphy'], string> = {
   zhimang: '"Zhi Mang Xing"',
 }
 
+export const THEME_VARS = ['--accent', '--accent-soft', '--ink', '--paper', '--seal', '--font-calligraphy'] as const
+
 export function applyPoetTheme(theme: PoetTheme, poetId: string): void {
   const el = document.documentElement
   el.dataset.poet = poetId
-  el.style.setProperty('--accent', theme.accent)
-  el.style.setProperty('--accent-soft', theme.accentSoft)
-  el.style.setProperty('--ink', theme.inkTone)
-  el.style.setProperty('--paper', theme.paperTone)
-  el.style.setProperty('--seal', theme.seal)
-  el.style.setProperty('--font-calligraphy', CALLIGRAPHY_FONTS[theme.calligraphy])
+  const vars: Record<(typeof THEME_VARS)[number], string> = {
+    '--accent': theme.accent,
+    '--accent-soft': theme.accentSoft,
+    '--ink': theme.inkTone,
+    '--paper': theme.paperTone,
+    '--seal': theme.seal,
+    '--font-calligraphy': CALLIGRAPHY_FONTS[theme.calligraphy],
+  }
+  for (const [k, v] of Object.entries(vars)) el.style.setProperty(k, v)
+}
+
+/** 离开人物页（回总览）时复位根变量，避免上一人主题泄漏到总览页 */
+export function resetPoetTheme(): void {
+  const el = document.documentElement
+  delete el.dataset.poet
+  for (const v of THEME_VARS) el.style.removeProperty(v)
 }
