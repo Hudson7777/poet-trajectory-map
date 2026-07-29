@@ -1,3 +1,4 @@
+import { useEffect, useId, useRef } from 'react'
 import type { CityEntry, Stop } from '../../data/schemas'
 import type { BrushStyle, BrushKind } from '../../themes/types'
 import { buildTrajectoryPath, visibleStops, type Projection } from './projection'
@@ -42,8 +43,38 @@ export function Trajectory({ stops, cities, project, year, brush, intense = fals
     const c = cities[s.city]
     return project(c.lon, c.lat)
   })
+  const d = points.length >= 2 ? buildTrajectoryPath(points, true) : ''
+
+  // F2 轨迹生长：mask 路径 dashoffset 从「上次长度 → 0」过渡，年份前进时线条向前生长；
+  // 回拨/reduced-motion 直接全显。mask 保留底层笔触纹理（枯笔/金粉不受影响）。
+  // effect 重跑前必须 cancel 上一个 Animation——TimeSlider 连续拖动时每帧重跑，
+  // fill:'forwards' 的 Animation 不 cancel 会持续堆积（critic-glm 裁决项）。
+  const maskId = `tjg-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`
+  const mainRef = useRef<SVGPathElement>(null)
+  const maskRef = useRef<SVGPathElement>(null)
+  const prevLen = useRef(0)
+  const animRef = useRef<Animation | null>(null)
+  useEffect(() => {
+    const main = mainRef.current
+    const mask = maskRef.current
+    if (!main || !mask || typeof main.getTotalLength !== 'function') return
+    const len = main.getTotalLength()
+    mask.style.strokeDasharray = `${len}`
+    animRef.current?.cancel()
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced || len <= prevLen.current || !mask.animate) {
+      mask.style.strokeDashoffset = '0'
+      animRef.current = null
+    } else {
+      animRef.current = mask.animate(
+        [{ strokeDashoffset: `${len - prevLen.current}` }, { strokeDashoffset: '0' }],
+        { duration: Math.min(300 + (len - prevLen.current) * 0.4, 900), easing: 'ease-out', fill: 'forwards' },
+      )
+    }
+    prevLen.current = len
+  }, [d])
+
   if (points.length < 2) return null
-  const d = buildTrajectoryPath(points, true)
   const { kind, colors, width } = brush
   const scale = intense ? 1.4 : 1
   const mainWidth = width * scale
@@ -55,25 +86,31 @@ export function Trajectory({ stops, cities, project, year, brush, intense = fals
   const dash = DASH_BY_KIND[kind]
   return (
     <g className={`trajectory-group trajectory-${kind}`}>
-      <path
-        d={d}
-        className={`trajectory trajectory-${kind}-halo`}
-        fill="none"
-        stroke={haloColor}
-        strokeWidth={haloWidth}
-        strokeOpacity={0.15}
-        strokeLinecap="round"
-      />
-      <path
-        d={d}
-        className={`trajectory trajectory-${kind}`}
-        fill="none"
-        stroke={stroke}
-        strokeWidth={mainWidth}
-        strokeDasharray={dash}
-        strokeLinecap="round"
-        filter={filter}
-      />
+      <mask id={maskId}>
+        <path ref={maskRef} d={d} fill="none" stroke="#fff" strokeWidth={haloWidth} strokeLinecap="round" />
+      </mask>
+      <g mask={`url(#${maskId})`}>
+        <path
+          d={d}
+          className={`trajectory trajectory-${kind}-halo`}
+          fill="none"
+          stroke={haloColor}
+          strokeWidth={haloWidth}
+          strokeOpacity={0.15}
+          strokeLinecap="round"
+        />
+        <path
+          ref={mainRef}
+          d={d}
+          className={`trajectory trajectory-${kind}`}
+          fill="none"
+          stroke={stroke}
+          strokeWidth={mainWidth}
+          strokeDasharray={dash}
+          strokeLinecap="round"
+          filter={filter}
+        />
+      </g>
     </g>
   )
 }
