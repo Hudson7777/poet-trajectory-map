@@ -54,7 +54,7 @@ export function PoetPage() {
   const { bundle } = state
   const dynastyInfo = dynastyState.dynasty
   return (
-    <PoetStateProvider key={poetId} initialYear={bundle.poet.death.year}>
+    <PoetStateProvider key={poetId} initialYear={bundle.poet.birth.year}>
       <main className="poet-page">
         <PaperTexture />
         {indexState.status === 'loaded' && (
