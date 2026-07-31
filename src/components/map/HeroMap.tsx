@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { PoetBundle } from '../../data/types'
-import type { DynastyInfo, PoetTheme } from '../../themes/types'
+import type { CalligraphyKind, DynastyInfo, PoetTheme } from '../../themes/types'
 import { usePoetState } from '../../pages/poet-state'
+import { calligraphyFontStack } from '../../themes'
 import { InkMap, type InkMapController } from './InkMap'
 import { Trajectory, isIntenseBrush } from './Trajectory'
 import { BrushDefs } from './brushDefs'
@@ -22,7 +23,7 @@ interface HeroMapProps {
 }
 
 /** 地图叠加层：题字、姓名朱印、图例、缩放提示。pointer-events: none，不阻塞地图交互 */
-function MapOverlay({ theme, poetName }: { theme: PoetTheme; poetName: string }) {
+function MapOverlay({ theme, poetName, dynastyName, dynastyCalligraphy }: { theme: PoetTheme; poetName: string; dynastyName: string; dynastyCalligraphy?: CalligraphyKind }) {
   // 姓名朱印取末两字（如「李白」「杜甫」），白文两行
   const sealChars = poetName.length >= 2 ? poetName.slice(-2) : poetName
   return (
@@ -40,7 +41,7 @@ function MapOverlay({ theme, poetName }: { theme: PoetTheme; poetName: string })
           <span className="font-calligraphy">{sealChars[0]}</span>
           <span className="font-calligraphy">{sealChars[1]}</span>
         </div>
-        <div className="map-dynasty-seal font-calligraphy">唐</div>
+        <div className="map-dynasty-seal font-calligraphy" style={dynastyCalligraphy ? { fontFamily: calligraphyFontStack(dynastyCalligraphy) } : undefined}>{dynastyName}</div>
       </div>
       <ul className="map-legend">
         <li><span className="legend-dot legend-solid" />生平</li>
@@ -151,7 +152,7 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
           )
         })}
       </InkMap>
-      <MapOverlay theme={theme} poetName={bundle.poet.name} />
+      <MapOverlay theme={theme} poetName={bundle.poet.name} dynastyName={dynasty.name} dynastyCalligraphy={dynasty.calligraphy} />
     </section>
   )
 }

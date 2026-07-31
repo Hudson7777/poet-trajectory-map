@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { MotifIcon } from '../themes/motifs/MotifIcon'
-import { poetThemes, resetPoetTheme, CALLIGRAPHY_FONTS } from '../themes'
+import { poetThemes, resetPoetTheme, CALLIGRAPHY_FONTS, calligraphyFontStack } from '../themes'
 import { PaperTexture } from '../components/PaperTexture'
 import { usePoetIndex } from '../components/map/usePoetIndex'
 import { useDynasties } from '../components/map/useDynasty'
@@ -17,7 +17,7 @@ export function OverviewPage() {
       {dynastiesState.status === 'loaded' && (
         <nav className="dynasty-switcher">
           {dynastiesState.dynasties.map(d => (
-            <span key={d.id} className="dynasty active">{d.name}</span>
+            <span key={d.id} className="dynasty active" style={{ fontFamily: calligraphyFontStack(d.calligraphy) }}>{d.name}</span>
           ))}
         </nav>
       )}

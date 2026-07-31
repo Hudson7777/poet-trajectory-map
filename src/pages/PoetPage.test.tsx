@@ -125,4 +125,18 @@ describe('PoetPage MiniMap 悬浮开关', () => {
     act(() => { heroObserver.cb([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver) })
     expect(document.querySelector('.mini-map')).toBeNull()
   })
+
+  it('导航诗人名各自锁本人书法体，不随当前页字体', async () => {
+    renderPage()
+    await screen.findByText('生平年表')
+    expect(screen.getByRole('link', { name: '李白' }).style.fontFamily).toContain('Liu Jian Mao Cao')
+    expect(screen.getByRole('link', { name: '杜甫' }).style.fontFamily).toContain('Long Cang')
+    expect(screen.getByRole('link', { name: '白居易' }).style.fontFamily).toContain('LXGW WenKai')
+  })
+
+  it('朝代 toggle 用朝代书法体（唐=马善政）', async () => {
+    renderPage()
+    await screen.findByText('生平年表')
+    expect(screen.getByRole('button', { name: /唐 ▾/ }).style.fontFamily).toContain('Ma Shan Zheng')
+  })
 })

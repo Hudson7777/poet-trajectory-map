@@ -13,7 +13,7 @@ import { QuotesSection } from '../components/sections/QuotesSection'
 import { WorksSection } from '../components/sections/WorksSection'
 import { SectionDivider } from '../components/sections/SectionDivider'
 import { PaperTexture } from '../components/PaperTexture'
-import { poetThemes, applyPoetTheme } from '../themes'
+import { poetThemes, applyPoetTheme, calligraphyFontStack } from '../themes'
 
 export function PoetPage() {
   const { dynasty, poetId } = useParams<{ dynasty: string; poetId: string }>()
@@ -77,6 +77,7 @@ export function PoetPage() {
                 <button
                   type="button"
                   className="poet-nav-dynasty-toggle font-calligraphy"
+                  style={{ fontFamily: calligraphyFontStack(dynastyInfo.calligraphy) }}
                   onClick={() => setDynOpen(o => !o)}
                 >
                   {dynastiesState.dynasties.find(d => d.id === dynasty)?.name ?? dynasty} ▾
@@ -91,13 +92,14 @@ export function PoetPage() {
                             <Link
                               to={`/poets/${d.id}/${first.id}`}
                               className={d.id === dynasty ? 'active' : ''}
+                              style={{ fontFamily: calligraphyFontStack(d.calligraphy) }}
                               onClick={() => setDynOpen(false)}
                             >
                               {d.name}
                             </Link>
                           ) : (
                             // 该朝代已注册但尚无文人（D10 扩展中间态），禁用而非跳转到空路由
-                            <span className="empty" aria-disabled="true">{d.name}（暂无）</span>
+                            <span className="empty" aria-disabled="true" style={{ fontFamily: calligraphyFontStack(d.calligraphy) }}>{d.name}（暂无）</span>
                           )}
                         </li>
                       )
@@ -112,6 +114,7 @@ export function PoetPage() {
                   key={p.id}
                   to={`/poets/${p.dynasty}/${p.id}`}
                   className={`poet-nav-item font-calligraphy${p.id === poetId ? ' active' : ''}`}
+                  style={{ fontFamily: calligraphyFontStack(poetThemes[p.theme]?.calligraphy) }}
                 >
                   {p.name}
                 </Link>
