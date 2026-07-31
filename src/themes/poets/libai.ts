@@ -17,8 +17,6 @@ export const libaiTheme: PoetTheme = {
     '<path d="M1120 30 q8 -6 16 0 t16 0" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity=".6"/>',
   inscription: { line: '天生我材必有用', sub: '李白 701—762' },
   easterEggs: [
-    { id: 'catch-moon', type: 'map-node', target: '当涂' },
-    { id: 'westward-suiye', type: 'decoration' },
     { id: 'hanlin-seal', type: 'timeline', target: '742' },
     { id: 'moon-rise', type: 'quote-hover' },
   ],

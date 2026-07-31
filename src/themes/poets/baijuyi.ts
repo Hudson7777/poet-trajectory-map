@@ -18,8 +18,6 @@ export const baijuyiTheme: PoetTheme = {
     '<path d="M60 60 Q300 54 560 58 T1100 58" fill="none" stroke="var(--ink)" stroke-width="1" opacity=".3"/>',
   inscription: { line: '乱花渐欲迷人眼', sub: '白居易 772—846' },
   easterEggs: [
-    { id: 'lute-notes', type: 'map-node', target: '浔阳' },
     { id: 'grass-sway', type: 'quote-hover' },
-    { id: 'slow-ending', type: 'decoration', target: '洛阳' },
   ],
 }

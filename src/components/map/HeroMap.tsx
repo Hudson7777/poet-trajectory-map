@@ -11,7 +11,6 @@ import { MarkerTooltip } from './MarkerTooltip'
 import { WorkMarker } from './WorkMarker'
 import { createProjection, visibleStops } from './projection'
 import { groupStopsByCity } from './groupStops'
-import { renderEasterEggs } from '../../themes/easter-eggs/registry'
 import { getBasemapRaw } from './basemaps'
 
 const LABEL_SIDES: LabelSide[] = ['right', 'top', 'left', 'bottom']
@@ -103,10 +102,6 @@ export function HeroMap({ bundle, theme, dynasty }: HeroMapProps) {
           onClick={() => setLockedStop(null)}
         />
         <Trajectory stops={bundle.poet.stops} cities={bundle.cities} project={project} year={year} brush={theme.brush} intense={intense} />
-        {renderEasterEggs(theme.easterEggs, 'map', city => {
-          const c = bundle.cities[city]
-          return c ? project(c.lon, c.lat) : undefined
-        })}
         {groups.map((g, i) => {
           const c = bundle.cities[g.city]
           const pos = project(c.lon, c.lat)

@@ -10,7 +10,7 @@ export type CalligraphyKind = 'liujian' | 'longcang' | 'mashan' | 'zhimang' | 'w
 
 export interface EasterEggConfig {
   id: string
-  type: 'map-node' | 'quote-hover' | 'timeline' | 'decoration'
+  type: 'quote-hover' | 'timeline'
   target?: string
   trigger?: { yearGte: number }
 }

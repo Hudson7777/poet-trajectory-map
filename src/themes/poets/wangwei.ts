@@ -17,9 +17,6 @@ export const wangweiTheme: PoetTheme = {
     '<path d="M60 62 Q300 56 560 60 T1100 60" fill="none" stroke="var(--ink)" stroke-width="1" opacity=".3"/>',
   inscription: { line: '行到水穷处，坐看云起时', sub: '王维 701—761' },
   easterEggs: [
-    { id: 'bamboo-sway', type: 'map-node', target: '辋川' },
-    { id: 'zen-whitespace', type: 'decoration' },
-    { id: 'mountain-ripple', type: 'map-node', target: '辋川' },
     { id: 'mist-drift', type: 'quote-hover' },
   ],
 }

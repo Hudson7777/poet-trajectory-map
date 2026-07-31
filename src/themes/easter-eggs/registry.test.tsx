@@ -13,11 +13,12 @@ describe('easter egg registry', () => {
   })
   it('renderEasterEggs 按 scope 过滤', () => {
     const { container } = render(
-      <svg>{renderEasterEggs([
-        { id: 'catch-moon', type: 'map-node', target: '当涂' },
+      <div>{renderEasterEggs([
+        { id: 'moon-rise', type: 'quote-hover' },
         { id: 'hanlin-seal', type: 'timeline', target: '742' },
-      ], 'map')}</svg>,
+      ], 'quote')}</div>,
     )
-    expect(container.querySelectorAll('g').length).toBe(1)
+    expect(container.querySelectorAll('.moon-rise').length).toBe(1)
+    expect(container.querySelectorAll('.hanlin-seal').length).toBe(0)
   })
 })

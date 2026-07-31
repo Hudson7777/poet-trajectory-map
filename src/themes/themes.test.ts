@@ -11,7 +11,7 @@ describe('poetThemes', () => {
     const theme = poetThemes[id]
     for (const key of REQUIRED_TOKENS) expect(theme[key], key).toBeTruthy()
     expect(theme.motifs.length).toBeGreaterThan(0)
-    expect(theme.easterEggs.length).toBeGreaterThanOrEqual(2)
+    expect(theme.easterEggs.length).toBeGreaterThanOrEqual(1)
   })
   it.each(Object.keys(poetThemes))('%s brush kind 合法且 colors 为两色', id => {
     const { brush } = poetThemes[id]

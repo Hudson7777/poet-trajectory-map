@@ -17,8 +17,6 @@ export const dufuTheme: PoetTheme = {
     '<path d="M620 60 L620 40 M640 60 L640 44" fill="none" stroke="var(--ink)" stroke-width="1" opacity=".4"/>',
   inscription: { line: '无边落木萧萧下', sub: '杜甫 712—770' },
   easterEggs: [
-    { id: 'straw-hut-hover', type: 'map-node', target: '成都' },
-    { id: 'snow-mountain', type: 'decoration' },
     { id: 'falling-leaves', type: 'quote-hover' },
   ],
 }

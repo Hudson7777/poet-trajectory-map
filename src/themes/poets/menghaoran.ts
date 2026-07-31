@@ -21,6 +21,5 @@ export const menghaoranTheme: PoetTheme = {
   inscription: { line: '春眠不觉晓', sub: '孟浩然 689—740' },
   easterEggs: [
     { id: 'falling-petals', type: 'quote-hover' },
-    { id: 'lake-level', type: 'map-node', target: '岳阳' },
   ],
 }
