@@ -115,14 +115,25 @@ describe('PoetPage MiniMap 悬浮开关', () => {
     expect(document.querySelector('.poet-nav-dynasty-menu')).toBeNull()
   })
 
-  it('Hero 滚出视口渲染 MiniMap，滚回视口移除', async () => {
+  it('Hero 滚出且年表区在视口内才显示 MiniMap，任一不满足即消失', async () => {
     renderPage()
     await screen.findByText('生平年表')
-    const heroObserver = ioInstances.find(i => i.el?.querySelector('.hero-map'))!
+    const heroObs = ioInstances.find(i => i.el?.querySelector('.hero-map'))!
+    const tlObs = ioInstances.find(i => i.el?.querySelector('.timeline-section'))!
+    const fire = (obs: typeof heroObs, isIntersecting: boolean) =>
+      act(() => { obs.cb([{ isIntersecting } as IntersectionObserverEntry], {} as IntersectionObserver) })
+    // Hero 滚出但年表未入视口 → 不显示
+    fire(heroObs, false)
     expect(document.querySelector('.mini-map')).toBeNull()
-    act(() => { heroObserver.cb([{ isIntersecting: false } as IntersectionObserverEntry], {} as IntersectionObserver) })
+    // 年表入视口 → 显示
+    fire(tlObs, true)
     expect(document.querySelector('.mini-map')).toBeTruthy()
-    act(() => { heroObserver.cb([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver) })
+    // 年表滚走（进入其人及下方）→ 消失
+    fire(tlObs, false)
+    expect(document.querySelector('.mini-map')).toBeNull()
+    // 年表在视口但 Hero 滚回 → 不显示
+    fire(tlObs, true)
+    fire(heroObs, true)
     expect(document.querySelector('.mini-map')).toBeNull()
   })
 

@@ -35,22 +35,32 @@ export function PoetPage() {
   const theme = poetThemes[poetId!] ?? poetThemes.libai
   useEffect(() => { applyPoetTheme(theme, poetId!) }, [theme, poetId])
 
-  // Hero 地图滚出视口后，右下角浮现迷你地图保持年表-地图联动可见
+  // 小地图仅在「大地图滚出视口 && 年表区（滑块+年表）在视口内」时浮现；
+  // 滚入其人及下方后年表区离口，小地图随之消失
   const heroRef = useRef<HTMLDivElement>(null)
-  const [showMini, setShowMini] = useState(false)
-  // 切换人物后回到页面顶部，并重置 MiniMap（否则 showMini 残留 true，新 IO 异步回调前会闪一帧）
-  useEffect(() => { window.scrollTo(0, 0); setShowMini(false) }, [poetId])
+  const tlWrapRef = useRef<HTMLDivElement>(null)
+  const [heroOut, setHeroOut] = useState(false)
+  const [tlInView, setTlInView] = useState(false)
+  // 切换人物后回到页面顶部，并重置 MiniMap 双条件（否则残留 true，新 IO 异步回调前会闪一帧）
+  useEffect(() => { window.scrollTo(0, 0); setHeroOut(false); setTlInView(false) }, [poetId])
   const loaded = state.status === 'loaded' && dynastyState.status === 'loaded'
   useEffect(() => {
-    const el = heroRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowMini(!entry.isIntersecting),
+    const hero = heroRef.current
+    const tl = tlWrapRef.current
+    if (!hero || !tl) return
+    const heroObs = new IntersectionObserver(
+      ([entry]) => setHeroOut(!entry.isIntersecting),
       { threshold: 0.1 },
     )
-    observer.observe(el)
-    return () => observer.disconnect()
+    const tlObs = new IntersectionObserver(
+      ([entry]) => setTlInView(entry.isIntersecting),
+      { threshold: 0 },
+    )
+    heroObs.observe(hero)
+    tlObs.observe(tl)
+    return () => { heroObs.disconnect(); tlObs.disconnect() }
   }, [loaded])
+  const showMini = heroOut && tlInView
 
   if (state.status === 'error' || dynastyState.status === 'error') {
     return (
@@ -126,8 +136,10 @@ export function PoetPage() {
           <HeroMap bundle={bundle} theme={theme} dynasty={dynastyInfo} />
         </div>
         {showMini && <MiniMap bundle={bundle} theme={theme} dynasty={dynastyInfo} />}
-        <TimeSlider min={bundle.poet.birth.year} max={bundle.poet.death.year} />
-        <TimelineSection stops={bundle.poet.stops} poetId={poetId!} />
+        <div ref={tlWrapRef} className="timeline-wrap">
+          <TimeSlider min={bundle.poet.birth.year} max={bundle.poet.death.year} />
+          <TimelineSection stops={bundle.poet.stops} poetId={poetId!} />
+        </div>
         <SectionDivider svg={theme.divider} />
         <SummarySection poet={bundle.poet} poetId={poetId!} />
         <SectionDivider svg={theme.divider} />
