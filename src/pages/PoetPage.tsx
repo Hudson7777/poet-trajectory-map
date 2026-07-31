@@ -137,7 +137,7 @@ export function PoetPage() {
         </div>
         {showMini && <MiniMap bundle={bundle} theme={theme} dynasty={dynastyInfo} />}
         <div ref={tlWrapRef} className="timeline-wrap">
-          <TimeSlider min={bundle.poet.birth.year} max={bundle.poet.death.year} />
+          <TimeSlider min={bundle.poet.birth.year} max={bundle.poet.death.year} poetId={poetId!} />
           <TimelineSection stops={bundle.poet.stops} poetId={poetId!} />
         </div>
         <SectionDivider svg={theme.divider} />

@@ -206,8 +206,22 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .poet-quote { font-size: 15px; opacity: .75; transition: opacity .3s ease; }
 .project-note { text-align: center; font-size: 13px; opacity: .55; padding: 24px 40px 48px; line-height: 1.8; }
 .time-slider-wrap { display: flex; align-items: center; gap: 16px; padding: 8px 40px; }
-.time-slider { flex: 1; accent-color: var(--accent); }
 .time-slider-year { font-size: 28px; min-width: 90px; }
+
+/* ===== 主题化时间轴 ===== */
+.tl-track { position: relative; flex: 1; height: 28px; cursor: pointer; touch-action: none; outline: none; }
+.tl-track::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; transform: translateY(-50%); background: var(--ink); opacity: .25; border-radius: 1px; }
+.tl-track:focus-visible::before { opacity: .5; }
+.tl-fill { position: absolute; left: 0; top: 50%; height: 2px; transform: translateY(-50%); background: linear-gradient(90deg, var(--accent-soft), var(--accent)); border-radius: 1px; }
+.tl-thumb { position: absolute; top: 50%; width: 18px; height: 18px; transform: translate(-50%, -50%); background: var(--seal); border: 2px solid var(--paper); border-radius: 3px; box-shadow: 0 1px 4px rgba(80, 60, 30, .4); transition: left .12s ease-out, scale .15s ease; }
+.tl-track.dragging .tl-thumb { transition: none; scale: 1.2; }
+.tl-particle { position: absolute; top: 50%; width: 6px; height: 6px; pointer-events: none; animation: tl-float .9s ease-out forwards; }
+.tlp-libai { background: var(--ink); border-radius: 50%; }
+.tlp-dufu { background: #a98a5b; border-radius: 60% 40% 60% 40%; }
+.tlp-wangwei { background: rgba(255, 255, 255, .85); filter: blur(2px); border-radius: 50%; }
+.tlp-menghaoran { background: var(--accent-soft); border-radius: 50% 0 50% 0; }
+.tlp-baijuyi { background: var(--accent); width: 2px; height: 10px; border-radius: 1px; }
+@keyframes tl-float { from { opacity: .8; transform: translate(-50%, -50%); } to { opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% - 34px)); } }
 .timeline-section ol { list-style: none; padding: 8px 40px 8px 56px; position: relative; }
 .timeline-section ol::before {
   content: ''; position: absolute; left: 44px; top: 12px; bottom: 12px;
