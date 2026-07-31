@@ -37,15 +37,17 @@ describe('WorksSection', () => {
   it('按年份间隔分卷并显示卷首题签与竖排诗题', () => {
     render(
       <PoetStateProvider initialYear={762}>
-        <WorksSection works={works} />
+        <WorksSection works={works} birthYear={701} />
       </PoetStateProvider>,
     )
     // 726 与 752 相差 26 > 6 → 分两卷
     expect(screen.getByText('卷一')).toBeTruthy()
     expect(screen.getByText('卷二')).toBeTruthy()
     // 卷首年份跨度
-    expect(screen.getByText('726—726')).toBeTruthy()
+    expect(screen.getByText('701—726')).toBeTruthy()
     expect(screen.getByText('752—752')).toBeTruthy()
+    // 虚岁 = year - birthYear + 1（与 summary stats.age 口径一致）
+    expect(screen.getByText('时年 26 岁')).toBeTruthy()
     // 竖排诗题（album-title）存在
     expect(screen.getByText('《静夜思》')).toBeTruthy()
   })
@@ -53,7 +55,7 @@ describe('WorksSection', () => {
   it('点击作品卡展开全文与背景', () => {
     render(
       <PoetStateProvider initialYear={762}>
-        <WorksSection works={works} />
+        <WorksSection works={works} birthYear={701} />
       </PoetStateProvider>,
     )
     fireEvent.click(screen.getByText('《静夜思》'))

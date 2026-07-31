@@ -71,6 +71,7 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .album-meta { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; min-width: 56px; }
 .album-year { font-size: 22px; color: var(--seal); line-height: 1.1; }
 .album-city { font-size: 13px; opacity: .7; }
+.album-age { font-size: 13px; opacity: .7; }
 .album-genre { font-size: 12px; opacity: .55; }
 .album-title {
   flex: 1;

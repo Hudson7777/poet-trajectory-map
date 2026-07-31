@@ -6,10 +6,10 @@ import { MotifIcon } from '../../themes/motifs/MotifIcon'
 import { groupIntoVolumes } from './volumeGrouping'
 import { VOLUME_NAMES } from './volumeNames'
 
-export function WorksSection({ works, poetId = 'libai' }: { works: Work[]; poetId?: string }) {
+export function WorksSection({ works, poetId = 'libai', birthYear }: { works: Work[]; poetId?: string; birthYear?: number }) {
   const { openWork, setOpenWork } = usePoetState()
   const theme = poetThemes[poetId] ?? poetThemes.libai
-  const volumes = groupIntoVolumes(works)
+  const volumes = groupIntoVolumes(works, birthYear)
   const volumeNames = VOLUME_NAMES[poetId]
 
   useEffect(() => {
@@ -41,6 +41,7 @@ export function WorksSection({ works, poetId = 'libai' }: { works: Work[]; poetI
                   <div className="album-meta">
                     <span className="album-year font-calligraphy">{w.year}</span>
                     <span className="album-city">{w.city}</span>
+                    {birthYear != null && <span className="album-age">时年 {w.year - birthYear + 1} 岁</span>}
                     <span className="album-genre">{w.genre}</span>
                   </div>
                   <h3 className="album-title font-calligraphy">《{w.title}》</h3>

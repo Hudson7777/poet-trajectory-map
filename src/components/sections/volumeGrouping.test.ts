@@ -70,4 +70,12 @@ describe('groupIntoVolumes', () => {
     expect(volumes[0].startYear).toBe(726)
     expect(volumes[0].title).toBe('卷一')
   })
+
+  it('传入 birthYear 时卷一从 birthYear 起算，其余卷不受影响', () => {
+    const works = [work('一', 726), work('二', 727), work('三', 750)]
+    const volumes = groupIntoVolumes(works, 701)
+    expect(volumes[0].startYear).toBe(701)
+    expect(volumes[0].endYear).toBe(727)
+    expect(volumes[1].startYear).toBe(750)
+  })
 })
