@@ -30,7 +30,7 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .marker-tooltip-close-x { font-size: 16px; fill: var(--ink); opacity: .55; }
 .marker-tooltip-close:hover .marker-tooltip-close-x { opacity: 1; }
 .font-calligraphy { font-family: var(--font-calligraphy), "Kaiti SC", "STKaiti", "KaiTi", serif; }
-.section-title { font-size: 28px; letter-spacing: 8px; margin: 48px 0 24px; display: flex; align-items: center; gap: 12px; }
+.section-title { font-family: var(--font-calligraphy), "Kaiti SC", "STKaiti", "KaiTi", serif; font-size: 28px; letter-spacing: 8px; margin: 48px 0 24px; display: flex; align-items: center; gap: 12px; }
 .quote-line { writing-mode: vertical-rl; font-size: 34px; letter-spacing: 6px; }
 .mounted-card { background: #f8f4e8; border: 1px solid #c9b992; box-shadow: 0 2px 12px rgba(80, 60, 30, .15); padding: 16px 20px; }
 .work-text { white-space: pre-line; line-height: 2.2; }
@@ -47,7 +47,7 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
   box-shadow: inset 0 1px 0 #e5dcc3, inset 0 -1px 0 #e5dcc3;
 }
 .volume-title { font-size: 26px; letter-spacing: 6px; color: var(--ink); }
-.volume-subtitle { font-size: 18px; letter-spacing: 3px; color: var(--accent); }
+.volume-subtitle { font-family: var(--font-calligraphy), "Kaiti SC", "STKaiti", "KaiTi", serif; font-size: 18px; letter-spacing: 3px; color: var(--accent); }
 .volume-years { font-size: 16px; color: var(--accent); opacity: .85; letter-spacing: 2px; margin-left: auto; }
 .album-card {
   position: relative;
@@ -228,8 +228,7 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 .tl-year { min-width: 64px; font-size: 22px; color: var(--seal); }
 .tl-role { margin-left: auto; opacity: .6; font-size: 14px; }
 .tl-uncertain { color: var(--seal); font-size: 12px; border: 1px dashed var(--seal); padding: 0 4px; border-radius: 3px; }
-.stats { display: flex; gap: 32px; padding: 0 40px 24px; }
-.stat { flex: 1; }
+.stats { display: grid; grid-template-columns: 15% 35% 35% 15%; gap: 32px; padding: 0 40px 24px; }
 .stat-value { font-size: 40px; color: var(--accent); }
 .stat-label { font-size: 14px; opacity: .6; }
 .review { padding: 0 40px 24px; line-height: 2; }
@@ -242,7 +241,7 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
   .hero-map .ink-map { height: 60vh; }
   .site-title { font-size: 30px; letter-spacing: 8px; }
   .quotes { gap: 20px; overflow-x: auto; }
-  .stats { flex-wrap: wrap; gap: 16px; }
+  .stats { grid-template-columns: 1fr 1fr; gap: 16px; }
 }
 
 /* ===== 动效 keyframes 与 reduced-motion 兜底 ===== */
