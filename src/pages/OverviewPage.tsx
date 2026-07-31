@@ -30,7 +30,7 @@ export function OverviewPage() {
             const callig = t ? { fontFamily: `${CALLIGRAPHY_FONTS[t.calligraphy]}, "Kaiti SC", "STKaiti", "KaiTi", serif` } : undefined
             return (
               <Link key={p.id} to={`/poets/${p.dynasty}/${p.id}`} className="poet-card mounted-card" style={{ animationDelay: `${Math.min(i * 90, 600)}ms` }}>
-                <MotifIcon name={t?.motifs[0] ?? 'moon'} size={48} />
+                <span className="poet-card-motif"><MotifIcon name={t?.motifs[0] ?? 'moon'} size={48} /></span>
                 <span className="poet-name font-calligraphy" style={callig}>{p.name}</span>
                 <span className="poet-years font-calligraphy" style={callig}>{p.birthYear} — {p.deathYear}</span>
                 <span className="poet-quote">{p.representativeLine}</span>
