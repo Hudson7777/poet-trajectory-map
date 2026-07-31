@@ -97,23 +97,23 @@ body { background: var(--paper); color: var(--ink); font-family: "Songti SC", "S
 @keyframes fall { to { transform: translateY(120px) rotate(40deg); opacity: 0 } }
 
 .grass-sway { position: absolute; bottom: 0; left: 0; right: 0; height: 30px; pointer-events: none; }
-.grass-blade { position: absolute; bottom: 0; width: 2px; height: 18px; background: var(--accent); transform-origin: bottom center; animation: grass-sway 3s ease-in-out infinite; }
+.grass-blade { position: absolute; bottom: 0; width: 2px; height: 14px; background: var(--accent); opacity: .6; transform-origin: bottom center; animation: grass-sway 4s ease-in-out infinite; }
 @keyframes grass-sway { 0%,100% { transform: rotate(-3deg) } 50% { transform: rotate(3deg) } }
 
 /* 李白·明月（quote-hover）：月盘从名句区底部缓缓升起 */
 .moon-rise { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.moon-disc { position: absolute; right: 12%; bottom: -30px; width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fffbe8, var(--accent-soft)); box-shadow: 0 0 24px 6px rgba(255, 248, 214, .55); animation: moon-rise 9s ease-in-out infinite; }
-@keyframes moon-rise { 0% { transform: translateY(24px); opacity: 0; } 25% { opacity: .9; } 50% { transform: translateY(-46px); opacity: .9; } 100% { transform: translateY(-70px); opacity: 0; } }
+.moon-disc { position: absolute; right: 12%; bottom: -30px; width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fffbe8, var(--accent-soft)); box-shadow: 0 0 24px 6px rgba(255, 248, 214, .35); animation: moon-rise 12s ease-in-out infinite; }
+@keyframes moon-rise { 0% { transform: translateY(24px); opacity: 0; } 25% { opacity: .55; } 50% { transform: translateY(-46px); opacity: .55; } 100% { transform: translateY(-70px); opacity: 0; } }
 
 /* 杜甫·落木（quote-hover）：褐黄阔叶慢旋飘落，与孟浩然粉色小花瓣区分 */
 .falling-leaves { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.leaf { position: absolute; top: -14px; width: 14px; height: 9px; background: #a98a5b; border-radius: 60% 40% 60% 40%; opacity: .65; animation: leaf-fall 8s linear infinite; }
+.leaf { position: absolute; top: -14px; width: 12px; height: 8px; background: #a98a5b; border-radius: 60% 40% 60% 40%; opacity: .5; animation: leaf-fall 10s linear infinite; }
 @keyframes leaf-fall { 0% { transform: translateY(0) rotate(0); } 50% { transform: translateY(130px) rotate(160deg); } 100% { transform: translateY(260px) rotate(340deg); opacity: 0; } }
 
 /* 王维·空山云雾（quote-hover）：两道雾气横向缓移，禅意留白 */
 .mist-drift { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.mist-band { position: absolute; left: -30%; width: 60%; height: 26px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent); filter: blur(6px); animation: mist-drift 12s linear infinite; }
-@keyframes mist-drift { from { transform: translateX(0); opacity: 0; } 20% { opacity: .8; } 80% { opacity: .8; } to { transform: translateX(230%); opacity: 0; } }
+.mist-band { position: absolute; left: -30%; width: 60%; height: 20px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent); filter: blur(6px); animation: mist-drift 16s linear infinite; }
+@keyframes mist-drift { from { transform: translateX(0); opacity: 0; } 20% { opacity: .6; } 80% { opacity: .6; } to { transform: translateX(230%); opacity: 0; } }
 
 .quotes-section { position: relative; }
 .timeline-section { position: relative; }
