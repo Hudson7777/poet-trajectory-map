@@ -1,5 +1,8 @@
 import { z } from 'zod'
 
+// 与 src/themes/types.ts 的 CalligraphyKind 同序同值，改一处必同改另一处
+export const CALLIGRAPHY_KINDS = ['liujian', 'longcang', 'mashan', 'zhimang', 'wenkai'] as const
+
 export const CityEntrySchema = z.object({
   name: z.string().min(1),
   modernName: z.string().min(1),
@@ -25,6 +28,7 @@ export const DynastyEntrySchema = z.object({
     sy: z.number(),
   }),
   viewBox: z.string().regex(/^\d+ \d+ \d+ \d+$/),
+  calligraphy: z.enum(CALLIGRAPHY_KINDS).optional(),
 })
 export const StopSchema = z.object({
   year: z.number().int(),

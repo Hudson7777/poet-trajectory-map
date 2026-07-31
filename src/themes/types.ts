@@ -6,6 +6,8 @@ export interface BrushStyle {
   width: number
 }
 
+export type CalligraphyKind = 'liujian' | 'longcang' | 'mashan' | 'zhimang' | 'wenkai'
+
 export interface EasterEggConfig {
   id: string
   type: 'map-node' | 'quote-hover' | 'timeline' | 'decoration'
@@ -20,7 +22,7 @@ export interface PoetTheme {
   paperTone: string
   seal: string
   motifs: string[]
-  calligraphy: 'liujian' | 'longcang' | 'mashan' | 'zhimang'
+  calligraphy: CalligraphyKind
   brush: BrushStyle
   divider: string
   inscription: { line: string; sub: string }
@@ -34,4 +36,5 @@ export interface DynastyInfo {
   divisionName: string
   projection: { lon0: number; lat0: number; s: number; sy: number }
   viewBox: string
+  calligraphy?: CalligraphyKind
 }

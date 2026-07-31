@@ -8,7 +8,7 @@ export const baijuyiTheme: PoetTheme = {
   paperTone: '#f7f2ea',
   seal: '#9e2b25',
   motifs: ['apricot', 'lute', 'incense-peak'],
-  calligraphy: 'zhimang',
+  calligraphy: 'wenkai',
   brush: { kind: 'spring', colors: ['#7a9b62', '#c07a86'], width: 2.5 },
   divider:
     '<path d="M40 50 q30 -8 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="var(--ink)" stroke-width="1.2" opacity=".5"/>' +

@@ -1,4 +1,4 @@
-import type { PoetTheme } from './types'
+import type { PoetTheme, CalligraphyKind } from './types'
 
 const modules = import.meta.glob('./poets/*.ts', { eager: true }) as Record<string, Record<string, PoetTheme>>
 
@@ -10,11 +10,12 @@ export const poetThemes: Record<string, PoetTheme> = Object.fromEntries(
   }),
 )
 
-export const CALLIGRAPHY_FONTS: Record<PoetTheme['calligraphy'], string> = {
+export const CALLIGRAPHY_FONTS: Record<CalligraphyKind, string> = {
   liujian: '"Liu Jian Mao Cao"',
   longcang: '"Long Cang"',
   mashan: '"Ma Shan Zheng"',
   zhimang: '"Zhi Mang Xing"',
+  wenkai: '"LXGW WenKai"',
 }
 
 export const THEME_VARS = ['--accent', '--accent-soft', '--ink', '--paper', '--seal', '--font-calligraphy'] as const
@@ -38,4 +39,9 @@ export function resetPoetTheme(): void {
   const el = document.documentElement
   delete el.dataset.poet
   for (const v of THEME_VARS) el.style.removeProperty(v)
+}
+
+/** 指定书法体的完整字体栈（含楷体 fallback）；key 缺失返回 undefined，由 font-calligraphy class 兜底 */
+export function calligraphyFontStack(key?: CalligraphyKind): string | undefined {
+  return key ? `${CALLIGRAPHY_FONTS[key]}, "Kaiti SC", "STKaiti", "KaiTi", serif` : undefined
 }

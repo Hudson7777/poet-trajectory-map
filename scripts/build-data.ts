@@ -55,6 +55,7 @@ for (const dynasty of registry) {
 }
 
 if (!failed) {
+  index.sort((a, b) => a.birthYear - b.birthYear)
   writeFileSync(join(root, 'public/data/index.json'), JSON.stringify(index, null, 2))
   writeFileSync(join(root, 'public/data/dynasties.json'), JSON.stringify(registry, null, 2))
   console.log(`✓ index.json（${index.length} 人）+ dynasties.json`)
