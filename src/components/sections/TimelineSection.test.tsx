@@ -34,4 +34,15 @@ describe('TimelineSection', () => {
     fireEvent.mouseEnter(screen.getByText('扬州 · 作《静夜思》'))
     expect(document.querySelector('li.active')).toBeTruthy()
   })
+  it('当前年份对应的年表条目带 selected 态（最新一个不超过当前年份的 stop）', () => {
+    renderWithState()
+    const selected = document.querySelector('li.selected')
+    expect(selected?.textContent).toContain('742')
+  })
+  it('点击后 selected 跟随年份移动', () => {
+    renderWithState()
+    fireEvent.click(screen.getByText('扬州 · 作《静夜思》'))
+    const selected = document.querySelector('li.selected')
+    expect(selected?.textContent).toContain('726')
+  })
 })

@@ -22,7 +22,7 @@ pnpm install
 pnpm build:data      # zod + validatePoet 规则校验，不过则退出码非零
 pnpm dev             # 开发服务器，默认端口 5173
 pnpm dev --port=5180 # 5173 常被本机另一应用占用，视觉验证用 5180
-pnpm test            # vitest run，11 文件 60 测试
+pnpm test            # vitest run，13 文件 68 测试（PoetPage.test 读真实 public/data 产物，跑前需先 build:data）
 pnpm build           # tsc -b && vite build，产物 dist/
 pnpm lint            # oxlint
 ```

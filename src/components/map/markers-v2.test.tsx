@@ -57,12 +57,12 @@ describe('CityMarker v2', () => {
     expect(container.querySelector('circle[fill="var(--seal)"]')).not.toBeNull()
   })
 
-  it('存疑组渲染空心虚线 circle + 存疑印章', () => {
+  it('存疑组渲染空心虚线 circle，不再额外渲染存疑文字印章', () => {
     const { container } = render(
       <svg><CityMarker group={stops.slice(1, 2)} {...baseProps} /></svg>,
     )
     expect(container.querySelector('circle[fill="none"][stroke-dasharray]')).not.toBeNull()
-    expect(container.querySelector('.uncertain-seal')).not.toBeNull()
+    expect(container.querySelector('.uncertain-seal')).toBeNull()
   })
 
   it('click 触发 onLock(group)', () => {

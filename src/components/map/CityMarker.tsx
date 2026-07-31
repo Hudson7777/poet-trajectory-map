@@ -45,12 +45,6 @@ export function CityMarker({ group, position, highlighted, labelSide, showLabel,
           <circle cx={x} cy={y} r={r / 2.4} fill="var(--paper)" />
         </>
       )}
-      {uncertain && (
-        <g className="uncertain-seal" transform={`translate(${x + r + 4} ${y - r - 4}) rotate(-4)`}>
-          <rect x={-2} y={-9} width={26} height={13} rx={1.5} fill="none" stroke="var(--seal)" strokeWidth={0.8} />
-          <text x={11} y={1} textAnchor="middle">存疑</text>
-        </g>
-      )}
       {showLabel && (
         <text
           x={label.x}

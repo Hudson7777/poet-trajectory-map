@@ -40,7 +40,8 @@ export function InkMap({ basemapRaw, viewBox, controllerRef, onZoomChange, child
         [vb[2], vb[3]],
       ])
       .on('zoom', (event) => {
-        gRef.current!.setAttribute('transform', event.transform.toString())
+        // flyTo 的 d3 transition 由 d3-timer 驱动，组件卸载后仍可能触发——gRef 已置 null，需防御
+        gRef.current?.setAttribute('transform', event.transform.toString())
         onZoomChange?.(event.transform.k)
       })
     select(svgRef.current).call(z)
@@ -54,8 +55,8 @@ export function InkMap({ basemapRaw, viewBox, controllerRef, onZoomChange, child
       }
     }
     return () => {
-      // 卸载时必须移除 d3-zoom 注册的监听器并清空 controller，避免路由切换后泄漏
-      if (svgRef.current) select(svgRef.current).on('.zoom', null)
+      // 卸载时必须杀掉在途 transition（d3-timer 驱动，否则卸载后仍 tick）、移除 d3-zoom 监听器并清空 controller
+      if (svgRef.current) select(svgRef.current).interrupt().on('.zoom', null)
       if (controllerRef) controllerRef.current = null
     }
   }, [controllerRef, onZoomChange, viewBox])

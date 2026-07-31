@@ -42,11 +42,12 @@ describe('CityMarker', () => {
     expect(container.querySelector('.city-year')).toBeNull()
     expect(container.querySelector('.city-event')).toBeNull()
   })
-  it('存疑组为空心虚线印点并带存疑印章', () => {
+  it('存疑组为空心虚线印点，不再额外渲染存疑文字印章（虚线本身即存疑标识）', () => {
     const { container } = render(
       <svg><CityMarker group={[stops[1]]} position={[100, 100]} highlighted={false} labelSide="right" showLabel={true} onHover={() => {}} onLock={() => {}} /></svg>,
     )
-    expect(container.querySelector('.uncertain-seal')).not.toBeNull()
+    expect(container.querySelector('circle[fill="none"][stroke-dasharray]')).not.toBeNull()
+    expect(container.querySelector('.uncertain-seal')).toBeNull()
   })
   it('click 触发 onLock 回调', () => {
     const onLock = vi.fn()

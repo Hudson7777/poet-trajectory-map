@@ -54,7 +54,7 @@ export function MiniMap({ bundle, theme, dynasty }: MiniMapProps) {
           )
         })()}
       </svg>
-      <span className="mini-map-year font-calligraphy">{year}</span>
+      <span className="mini-map-year font-calligraphy">{year}{latest && ` · ${latest.city}`}</span>
     </button>
   )
 }
