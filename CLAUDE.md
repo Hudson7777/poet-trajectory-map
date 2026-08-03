@@ -31,11 +31,15 @@ pnpm lint            # oxlint
 
 视觉验证流程：`pnpm dev --port=5180` 起服务，再用 playwright-cli 截图核对。
 
+## CodeGraph
+
+本仓库已建 codegraph 索引（`.codegraph/`，已 gitignore 勿入库）。结构类查询（符号位置/谁调用谁/影响面）优先用 MCP `codegraph_explore`（projectPath 传本仓库路径），替代 grep+Read 循环；使用细则见全局 `~/.claude/rules/codegraph.md`。索引由 post-commit/post-merge hook 自动 `codegraph sync -q` 增量更新，无需手工维护；hook 备份脚本在 `~/personal-claude-code-settings/personal-mac/codegraph/install-hooks.sh`，sync 失败日志在 `~/Documents/claude-outputs/codegraph-hook.log`。
+
 ## 目录结构
 
 ```
 data/
-  dynasties.yaml              # 朝代注册表（id/name/era/divisionName/basemap/cities/projection/viewBox）
+  dynasties.yaml              # 朝代注册表（id/name/era/divisionName/basemap/cities/projection/viewBox/calligraphy）
   geo/tang/{basemap.svg,cities.yaml}   # 朝代地理：底图 + 城市坐标表（48 城）
   poets/tang/*.yaml           # 一人一文件（libai/dufu/wangwei/menghaoran/baijuyi + _sample）
 scripts/
