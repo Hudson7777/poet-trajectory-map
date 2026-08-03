@@ -79,8 +79,10 @@ public/data/*.json            # 构建产物，前端运行时 fetch
 | 设计 spec（v0.2 视觉重设计） | `docs/superpowers/specs/2026-07-27-poet-map-v02-redesign.md` |
 | 实施计划（v0.1） | `docs/superpowers/plans/2026-07-24-poet-trajectory-map.md` |
 | 实施计划（v0.2） | `docs/superpowers/plans/2026-07-27-poet-map-v02.md` |
+| 设计 spec（v0.4 UI 打磨） | `docs/superpowers/specs/2026-07-31-poet-map-v04-design.md` |
 | 实施计划（v0.3） | `docs/superpowers/plans/2026-07-29-poet-map-v03.md` |
-| 关键决策 D1-D14 | `docs/decisions.md` |
+| 实施计划（v0.4） | `docs/superpowers/plans/2026-07-31-poet-map-v04.md` |
+| 关键决策 D1-D17 | `docs/decisions.md` |
 | 五人校对表（事实源） | `docs/proofread/{libai,dufu,wangwei,menghaoran,baijuyi}.md` |
 | 验收截图 | `docs/screenshots/`（v0.1）与 `docs/screenshots/v02/`（v0.2，14 张）与 `docs/screenshots/v03/`（v0.3，4 张）与 `docs/screenshots/v04/`（v0.4，21 张） |
 | 执行 ledger | `.superpowers/sdd/progress.md` |

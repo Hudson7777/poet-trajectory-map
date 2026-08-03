@@ -67,3 +67,9 @@
 - **D14 signature 精华名句字段**：Poet schema 显式声明 `signature: string[5]`——选句是内容决策（显式、可审查、纳入校对流程），由作者逐句审定而非构建期推断。构建期校验两条：① 每句必须是某作品 `famous` 数组成员；② 五句分属五个不同作品（一句一作）。
 - **替代方案**：原 v0.2 的 QuotesSection 用 `works.flatMap(w => w.famous).slice(0, 5)` 隐式选句——存在两个问题：同一作品可能贡献多句（五句不等于五作），且 `works` 数组按编年序排列而非知名度，slice(0,5) 取的是「编年最早」而非「最具代表性」。显式 `signature` 把选句从构建期推断改回内容决策，与 D8（争议处理）/D13（考证纪律）同构——内容判断不交给代码自动裁决。
 - **取数实现**：`QuotesSection` 从 `works.flatMap.slice(0,5)` 改为渲染 `poet.signature`，并通过 `works.find(w => w.famous.includes(line))?.title` 反查作品名作为 cite。
+
+## 第 7 节确认：v0.4 字体与彩蛋收敛、时间轴定制（D15/D16/D17）
+
+- **D15 字体分配原则「契合其人其时代，不强求独特」**（用户 2026-07-31 定）：诗人字体以契合度为唯一约束（李白流江毛草/杜甫龙藏/王维马善政/孟浩然志莽行书/白居易霞鹜文楷）；朝代也是字体一等公民——`dynasties.yaml` 增 `calligraphy` 字段（唐=马善政，与王维共用不违原则），经 zod schema → dynasties.json → `calligraphyFontStack()` 数据驱动到导航 toggle/菜单/朝代印，新朝代注册即得。导航诗人名 inline 锁本人字体 + `font-calligraphy` class 双保险。
+- **D16 彩蛋收敛：地图零彩蛋**（用户 2026-07-31 定）：大地图上的彩蛋元素（捉月/草堂/竹影/琵琶/湖平等 10 个）全部删除——在地图信息密度上叠加装饰被判定为「突兀喧宾夺主」。彩蛋只存于两处：名句区 quote-hover（五人，按落英水准统一调参：低透明、慢节奏、局部不遮字）与年表（李白 742 翰林印章）。registry 收窄为 quote/timeline 双 scope，`EasterEggConfig.type` 同步收窄。
+- **D17 时间轴自定义滑块 + hover 独立变换属性**：原生 `input range` 替换为 `div[role=slider]`（朱砂印拇指/水墨轨道/键盘 ←/→/Home/End/aria 全套），拖动散诗人意象粒子（90ms 节流、cap 12、animationend 回收）。**层叠约束**：`animation fill forwards` 的 keyframe 终态在层叠中高于普通声明，会永久压制 hover 的 `transform`——本项目所有 hover 位移/缩放一律用 CSS Transforms L2 独立属性 `translate`/`scale`（poet-card、album-card、poet-card-motif），不受动画填充影响。
