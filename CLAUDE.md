@@ -90,6 +90,7 @@ public/data/*.json            # 构建产物，前端运行时 fetch
 | 五人校对表（事实源） | `docs/proofread/{libai,dufu,wangwei,menghaoran,baijuyi}.md` |
 | 验收截图 | `docs/screenshots/`（v0.1）与 `docs/screenshots/v02/`（v0.2，14 张）与 `docs/screenshots/v03/`（v0.3，4 张）与 `docs/screenshots/v04/`（v0.4，21 张） |
 | 执行 ledger | `.superpowers/sdd/progress.md` |
+| 会话交接 | `docs/handoff/`（跨会话冷启动交接 prompt，新会话按文件内指令先验证再继续） |
 
 ## 遗留 Minor 与扩展注意
 
